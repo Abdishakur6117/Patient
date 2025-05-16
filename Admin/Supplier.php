@@ -256,18 +256,20 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         <div class="dashboard-wrapper">
             <div class="dashboard-ecommerce">
                 <div class="container-fluid dashboard-content ">
-                    <h2>User Form</h2>
-                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add User</button>
+                    <h2>Supplier Form</h2>
+                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add Supplier</button>
                     <br>
                     <br>
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <td>ID</td>
-                                <td>UserName</td>
-                                <td>Password</td>
-                                <td>Role</td>
-                                <td>Created at</td>
+                                <td>Supplier Name</td>
+                                <td>Contact Person </td>
+                                <td>Phone</td>
+                                <td>Email</td>
+                                <td>Gender</td>
+                                <td>Address</td>
                                 <td>Actions</td>
                             </tr>
                         </thead>
@@ -276,44 +278,56 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     </table>
                 </div>
                 <!--/   INsert Modal start -->
-                <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="supplierModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add New User</h5>
+                                <h5 class="modal-title">Add New Supplier</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="userForm" method="POST" action="">
+                                <form id="supplierForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="text" class="form-control" id="username" name="username">
+                                                <label for="supplier">Supplier Name </label>
+                                                <input type="text" class="form-control" id="supplier_name" name="supplier_name">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="password">Password </label>
-                                                <input type="password" class="form-control" id="password" name="password">
+                                                <label for="contact">Contact Person </label>
+                                                <input type="text" class="form-control" id="contact_person" name="contact_person">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="password">ConfirmPassword </label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                                                <label for="phone">Phone </label>
+                                                <input type="number" class="form-control" id="phone" name="phone">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="role" id="role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Staff">Staff</option>
+                                                <label for="email">Email </label>
+                                                <input type="email" class="form-control" id="email" name="email">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="gender">Gender </label>
+                                                <select class="form-control"  name="gender" id="gender">
+                                                    <option value="">Select Gender</option>
+                                                    <option value="male">male</option>
+                                                    <option value="female">female</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="address">Address </label>
+                                                <input type="text" class="form-control" id="address" name="address">
                                             </div>
                                         </div>
                                     </div>
@@ -328,33 +342,57 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                 </div>
                 <!--/   INsert Modal end -->
                 <!-- start Update Model  -->
-                <div class="modal fade" id="edit_userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="edit_supplierModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Update Users</h5>
+                                <h5 class="modal-title">Update Supplier</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="edit_userForm" method="POST" action="">
+                            <form id="edit_supplierForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
+                                                <label for="supplier">Supplier Name </label>
                                                 <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                                <input type="text" class="form-control" id="edit_username" name="edit_username">
+                                                <input type="text" class="form-control" id="edit_supplier_name" name="edit_supplier_name">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="edit_role" id="edit_role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="admin">admin</option>
-                                                    <option value="staff">staff</option>
+                                                <label for="contact">Contact Person </label>
+                                                <input type="text" class="form-control" id="edit_contact_person" name="edit_contact_person">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="phone">Phone </label>
+                                                <input type="number" class="form-control" id="edit_phone" name="edit_phone">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="email">Email </label>
+                                                <input type="email" class="form-control" id="edit_email" name="edit_email">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="gender">Gender </label>
+                                                <select class="form-control"  name="edit_gender" id="edit_gender">
+                                                    <option value="">Select Gender</option>
+                                                    <option value="male">male</option>
+                                                    <option value="female">female</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="address">Address </label>
+                                                <input type="text" class="form-control" id="edit_address" name="edit_address">
                                             </div>
                                         </div>
                                     </div>
@@ -394,7 +432,6 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
     <!-- ============================================================== -->
     <!-- end main wrapper  -->
 <!-- jQuery first -->
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
  <script src="../assets/vendor/jquery/jquery-3.3.1.min.js"></script>
  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
@@ -402,26 +439,26 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         $(document).ready(function() {
             // Initialize modals and load data
             $('#insertModal').click(function() {
-                $('#userModal').modal('show');
-                $('#userForm')[0].reset();
+                $('#supplierModal').modal('show');
+                $('#supplierForm')[0].reset();
             });
             
             // Initial data loading
             displayData();
             
             // Create user record
-            $('#userForm').submit(function(e) {
+            $('#supplierForm').submit(function(e) {
                 e.preventDefault();
                 
                 $.ajax({
                     type: 'POST',
-                    url: 'userOperation.php?action=create_user',
+                    url: 'supplierOperation.php?action=create_supplier',
                     data: $(this).serialize(),
                     dataType: "json",
                     success: function(res) {
                         if (res.status === 'success') {
                             showSuccess(res.message, function() {
-                                $('#userModal').modal('hide');
+                                $('#supplierModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -436,38 +473,50 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
             
             // Edit user record
             $(document).on('click', '.editBtn', function() {
-                const userData = {
+                const supplierData = {
                     id: $(this).data('id'),
-                    username: $(this).data('username'),
-                    role: $(this).data('role')
+                    supplier_name: $(this).data('supplier_name'),
+                    contact_person: $(this).data('contact_person'),
+                    phone: $(this).data('phone'),
+                    email: $(this).data('email'),
+                    gender: $(this).data('gender'),
+                    address: $(this).data('address')
                 };
                 
-                $('#edit_id').val(userData.id);
-                $('#edit_username').val(userData.username);
-                $('#edit_role').val(userData.role);
+                $('#edit_id').val(supplierData.id);
+                $('#edit_supplier_name').val(supplierData.supplier_name);
+                $('#edit_contact_person').val(supplierData.contact_person);
+                $('#edit_phone').val(supplierData.phone);
+                $('#edit_email').val(supplierData.email);
+                $('#edit_gender').val(supplierData.gender);
+                $('#edit_address').val(supplierData.address);
                 
-                $('#edit_userModal').modal('show');
+                $('#edit_supplierModal').modal('show');
             });
             
             // Update user record
-            $('#edit_userForm').submit(function(e) {
+            $('#edit_supplierForm').submit(function(e) {
                 e.preventDefault();
                 const submitBtn = $(this).find('[type="submit"]');
                 submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
                 const formData = {
                   edit_id: $('#edit_id').val(),
-                  edit_username: $('#edit_username').val(),
-                  edit_role: $('#edit_role').val()
+                  edit_supplier_name: $('#edit_supplier_name').val(),
+                  edit_contact_person: $('#edit_contact_person').val(),
+                  edit_phone: $('#edit_phone').val(),
+                  edit_email: $('#edit_email').val(),
+                  edit_gender: $('#edit_gender').val(),
+                  edit_address: $('#edit_address').val()
                 };
                 $.ajax({
-                    url: 'userOperation.php?action=update_user',
+                    url: 'supplierOperation.php?action=update_supplier',
                     method: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',
                     success: function(response) {
                         if(response.status === 'success') {
                             showSuccess(response.message, function() {
-                                $('#edit_userModal').modal('hide');
+                                $('#edit_supplierModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -478,13 +527,13 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                         showError('An error occurred: ' + xhr.statusText);
                     },
                     complete: function() {
-                        submitBtn.prop('disabled', false).html('Update user');
+                        submitBtn.prop('disabled', false).html('Update supplier');
                     }
                 });
             });
             // Delete user record
             $(document).on('click', '.deleteBtn', function() {
-                const user_id = $(this).data('id');
+                const supplier_id = $(this).data('id');
                 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -498,8 +547,8 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'POST',
-                            url: 'userOperation.php?action=delete_user',
-                            data: { id: user_id },
+                            url: 'supplierOperation.php?action=delete_supplier',
+                            data: { id: supplier_id },
                             dataType: 'json',
                             success: function(res) {
                                 if (res.status === 'success') {
@@ -521,7 +570,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
             // Display user data in table
             function displayData() {
                 $.ajax({
-                    url: 'userOperation.php?action=display_user',
+                    url: 'supplierOperation.php?action=display_supplier',
                     dataType: 'json',
                     success: function(response) {
                         // Check if response is valid and contains data
@@ -534,20 +583,26 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                         response.forEach(row => {
                             tableData += `
                             <tr>
-                                <td>${row.user_id || ''}</td>
-                                <td>${row.username || ''}</td>
-                                <td>${row.password || ''}</td>
-                                <td>${row.role || ''}</td>
-                                <td>${row.created_at || ''}</td>
+                                <td>${row.supplier_id || ''}</td>
+                                <td>${row.supplier_name || ''}</td>
+                                <td>${row.contact_person || ''}</td>
+                                <td>${row.phone || ''}</td>
+                                <td>${row.email || ''}</td>
+                                <td>${row.gender || ''}</td>
+                                <td>${row.address || ''}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm editBtn" 
-                                        data-id="${row.user_id}" 
-                                        data-username="${row.username}"
-                                        data-role="${row.role}">
+                                        data-id="${row.supplier_id}" 
+                                        data-supplier_name="${row.supplier_name}"
+                                        data-contact_person="${row.contact_person}"
+                                        data-phone="${row.phone}"
+                                        data-email="${row.email}"
+                                        data-gender="${row.gender}"
+                                        data-address="${row.address}">
                                         Edit
                                     </button>
                                     <button class="btn btn-danger btn-sm deleteBtn" 
-                                        data-id="${row.user_id}">
+                                        data-id="${row.supplier_id}">
                                         Delete
                                     </button>
                                 </td>
@@ -601,9 +656,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
             }
         });
     </script>
-    
-    <!-- bootstap bundle js -->
-    <!-- slimscroll js -->
+    <!-- slims croll js -->
     <script src="../assets/vendor/slimscroll/jquery.slimscroll.js"></script>
     <!-- main js -->
     <script src="../assets/libs/js/main-js.js"></script>

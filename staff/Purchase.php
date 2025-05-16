@@ -2,13 +2,12 @@
 session_start();
 
 // Check if the user is logged in and has the 'Admin' role
-if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
+if (!isset($_SESSION['user']) || $_SESSION['role'] != 'staff') {
     // Redirect to login page if not logged in or not an Admin
     header("Location: login.php");
     exit();
 }
 ?>
-
 
 <!doctype html>
 <html lang="en">
@@ -60,7 +59,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         <!-- ============================================================== -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="../index.php">Stock Management System</a>
+                <a class="navbar-brand" href="../staff_dashboard.php">Stock Management System</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -102,41 +101,10 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link margin-top-10" href="../index.php">
+                                <a class="nav-link margin-top-10" href="../staff_dashboard.php">
                                     <i class="fas fa-tachometer-alt"></i> Dashboard
                                 </a>
                             </li>
-
-                            <!-- Users -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-users"
-                                    aria-expanded="false" aria-controls="submenu-users">
-                                    <i class="fas fa-users"></i> Users
-                                </a>
-                                <div id="submenu-users" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/users.php">List Users</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
-                            <!-- Categories -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-categories"
-                                    aria-expanded="false" aria-controls="submenu-categories">
-                                    <i class="fas fa-tags"></i> Categories
-                                </a>
-                                <div id="submenu-categories" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/Category.php">List Categories</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
                             <!-- Products -->
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-products"
@@ -146,27 +114,11 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                 <div id="submenu-products" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/Products.php">List Products</a>
+                                            <a class="nav-link" href="../staff/Products.php">List Products</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
-
-                            <!-- Suppliers -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-suppliers"
-                                    aria-expanded="false" aria-controls="submenu-suppliers">
-                                    <i class="fas fa-truck"></i> Suppliers
-                                </a>
-                                <div id="submenu-suppliers" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/Supplier.php">List Suppliers</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
                             <!-- Purchases -->
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-purchases"
@@ -176,7 +128,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                 <div id="submenu-purchases" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/Purchase.php">List Purchases</a>
+                                            <a class="nav-link" href="../staff/Purchase.php">List Purchases</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -191,7 +143,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                 <div id="submenu-purchase-details" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/PurchaseDetails.php">List Purchase Details</a>
+                                            <a class="nav-link" href="../staff/PurchaseDetails.php">List Purchase Details</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -206,7 +158,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                 <div id="submenu-sales" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/Sale.php">List Sales</a>
+                                            <a class="nav-link" href="../staff/Sale.php">List Sales</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -221,27 +173,11 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                 <div id="submenu-sale-details" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/SaleDetails.php">List Sale Details</a>
+                                            <a class="nav-link" href="../staff/SaleDetails.php">List Sale Details</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
-
-                            <!-- Reports -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-reports"
-                                    aria-expanded="false" aria-controls="submenu-reports">
-                                    <i class="fas fa-chart-bar"></i> Reports
-                                </a>
-                                <div id="submenu-reports" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/supplierReport.php">Supplier Report</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
                         </ul>
                     </div>
                 </nav>
@@ -256,18 +192,18 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         <div class="dashboard-wrapper">
             <div class="dashboard-ecommerce">
                 <div class="container-fluid dashboard-content ">
-                    <h2>User Form</h2>
-                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add User</button>
+                    <h2>purchase Form</h2>
+                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add purchase</button>
                     <br>
                     <br>
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <td>ID</td>
+                                <td>Supplier Name</td>
                                 <td>UserName</td>
-                                <td>Password</td>
-                                <td>Role</td>
-                                <td>Created at</td>
+                                <td> Purchase Date</td>
+                                <td>Total Amount</td>
                                 <td>Actions</td>
                             </tr>
                         </thead>
@@ -276,47 +212,74 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     </table>
                 </div>
                 <!--/   INsert Modal start -->
-                <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="purchaseModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add New User</h5>
+                                <h5 class="modal-title">Add New Purchases</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="userForm" method="POST" action="">
+                                <form id="purchaseForm" method="POST" >
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="text" class="form-control" id="username" name="username">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">Password </label>
-                                                <input type="password" class="form-control" id="password" name="password">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">ConfirmPassword </label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="role" id="role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Staff">Staff</option>
+                                                <label for="supplier">Supplier Name </label>
+                                                <select class="form-control" name="supplier_id" id="supplier_id">
+                                                    <option value="">Select Supplier</option>
+                                                    <!-- Populate this dynamically using backend data -->
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="user">User Name </label>
+                                                <select class="form-control" name="user_id" id="user_id">
+                                                    <option value="">Select User</option>
+                                                    <!-- Populate this dynamically using backend data -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="purchase_date">Purchase Date </label>
+                                                <input type="date" class="form-control" id="purchase_date" name="purchase_date">
+                                            </div>
+                                        </div>
                                     </div>
+                                    
+                                    <!-- Start of Purchase Items Section -->
+                                    <div class="purchase-items">
+                                        <div class="row purchase-item">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="product_id[]">Product</label>
+                                                    <select class="form-control" name="product_id[]" id="product_id">
+                                                        <option value="">Select Product</option>
+                                                        <!-- Populate this dynamically with products -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="quantity[]">Quantity</label>
+                                                    <input type="number" class="form-control" name="quantity[]" placeholder="Enter Quantity" >
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="unit_price[]">Unit Price</label>
+                                                    <input type="number" class="form-control" name="unit_price[]" placeholder="Enter Price" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Button to Add New Product Line -->
+                                    <button type="button" id="addItemBtn" class="btn btn-secondary">Add Another Item</button>
+
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         <button type="submit" class="btn btn-primary">Save</button>
@@ -326,38 +289,78 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                         </div>
                     </div>
                 </div>
+
                 <!--/   INsert Modal end -->
                 <!-- start Update Model  -->
-                <div class="modal fade" id="edit_userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="edit_purchaseModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Update Users</h5>
+                                <h5 class="modal-title">Add New Purchases</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="edit_userForm" method="POST" action="">
+                                <form id="edit_purchaseForm" method="POST" >
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
+                                                <label for="supplier">Supplier Name </label>
                                                 <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                                <input type="text" class="form-control" id="edit_username" name="edit_username">
+                                                <select class="form-control" name="edit_supplier_id" id="edit_supplier_id">
+                                                    <option value="">Select Supplier</option>
+                                                    <!-- Populate this dynamically using backend data -->
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="edit_role" id="edit_role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="admin">admin</option>
-                                                    <option value="staff">staff</option>
+                                                <label for="user">User Name </label>
+                                                <select class="form-control" name="edit_user_id" id="edit_user_id">
+                                                    <option value="">Select User</option>
+                                                    <!-- Populate this dynamically using backend data -->
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="purchase_date">Purchase Date </label>
+                                                <input type="date" class="form-control" id="edit_purchase_date" name="edit_purchase_date">
+                                            </div>
+                                        </div>
                                     </div>
+                                    
+                                    <!-- Start of Purchase Items Section -->
+                                    <div class="purchase-items">
+                                        <div class="row purchase-item">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="product_id[]">Product</label>
+                                                    <select class="form-control" name="edit_product_id[]" id="edit_product_id">
+                                                        <option value="">Select Product</option>
+                                                        <!-- Populate this dynamically with products -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="quantity[]">Quantity</label>
+                                                    <input type="number" class="form-control" name="edit_quantity[]" placeholder="Enter Quantity" >
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="unit_price[]">Unit Price</label>
+                                                    <input type="number" class="form-control" name="edit_unit_price[]" placeholder="Enter Price" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Button to Add New Product Line -->
+                                    <button type="button" id="addItemBtn" class="btn btn-secondary">Add Another Item</button>
+
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         <button type="submit" class="btn btn-primary">Update</button>
@@ -402,26 +405,162 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         $(document).ready(function() {
             // Initialize modals and load data
             $('#insertModal').click(function() {
-                $('#userModal').modal('show');
-                $('#userForm')[0].reset();
+                $('#purchaseModal').modal('show');
+                $('#purchaseForm')[0].reset();
+            });
+            getProductOptions(function (optionsHtml) {
+                $('#product_id').html(optionsHtml);
             });
             
             // Initial data loading
             displayData();
-            
+            loadSupplier();
+            loadUser();
+
+            // Load aircraft for dropdown
+            function loadSupplier() {
+                $.ajax({
+                    url: 'purchaseOperation.php?action=get_supplier',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if(response.status === 'success' && response.data) {
+                            const $select = $('#supplier_id, #edit_supplier_id');
+                            $select.empty().append('<option value="">Select Supplier</option>');
+                            
+                            response.data.forEach(supplier => {
+                                $select.append($('<option>', {
+                                    value: supplier.supplier_id,
+                                    text: supplier.name
+                                }));
+                            });
+                        } else {
+                            showError('Failed to load supplier');
+                        }
+                    },
+                    error: function() {
+                        showError('Network error loading supplier');
+                    }
+                });
+            }
+            function loadUser() {
+                $.ajax({
+                    url: 'purchaseOperation.php?action=get_user',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if(response.status === 'success' && response.data) {
+                            const $select = $('#user_id, #edit_user_id');
+                            $select.empty().append('<option value="">Select User</option>');
+                            
+                            response.data.forEach(user => {
+                                $select.append($('<option>', {
+                                    value: user.user_id,
+                                    text: user.username
+                                }));
+                            });
+                        } else {
+                            showError('Failed to load user');
+                        }
+                    },
+                    error: function() {
+                        showError('Network error loading user');
+                    }
+                });
+            }
+            // Function to add a new purchase item row
+            document.getElementById('addItemBtn').addEventListener('click', function () {
+                getProductOptions(function (optionsHtml) {
+                    const itemRow = document.createElement('div');
+                    itemRow.classList.add('row', 'purchase-item', 'mt-2');
+
+                    itemRow.innerHTML = `
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Product</label>
+                                <select class="form-control" name="product_id[]">
+                                    ${optionsHtml}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Quantity</label>
+                                <input type="number" class="form-control" name="quantity[]" placeholder="Enter Quantity" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Unit Price</label>
+                                <input type="number" class="form-control" name="unit_price[]" placeholder="Enter Price" required>
+                            </div>
+                        </div>
+                    `;
+
+                    document.querySelector('.purchase-items').appendChild(itemRow);
+                });
+            });
+
+            function getProductOptions(callback) {
+                // $.ajax({
+                //     url: 'purchaseOperation.php?action=get_product',
+                //     method: 'GET',
+                //     dataType: 'json',
+                //     success: function(response) {
+                //         if(response.status === 'success' && response.data) {
+                //             const $select = $('#product_id, #edit_product_id');
+                //             let options = '<option value="">Select product</option>';
+                //             response.data.forEach(product => {
+                //                 options += `<option value="${product.product_id}">${product.name}</option>`;
+                //             });
+                //             callback(options);
+                //         } else {
+                //             showError('Failed to load product');
+                //         }
+                //     },
+                //     error: function() {
+                //         showError('Network error loading product');
+                //     }
+                // });
+                $.ajax({
+                    url: 'purchaseOperation.php?action=get_product',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if(response.status === 'success' && response.data) {
+                            const $select = $('#product_id, #edit_product_id');
+                            $select.empty().append('<option value="">Select product</option>');
+                            
+                            response.data.forEach(product => {
+                                $select.append($('<option>', {
+                                    value: product.product_id,
+                                    text: product.name
+                                }));
+                            });
+                        } else {
+                            showError('Failed to load product');
+                        }
+                    },
+                    error: function() {
+                        showError('Network error loading product');
+                    }
+                });
+            }
+
+
             // Create user record
-            $('#userForm').submit(function(e) {
+            $('#purchaseForm').submit(function(e) {
                 e.preventDefault();
                 
                 $.ajax({
                     type: 'POST',
-                    url: 'userOperation.php?action=create_user',
+                    url: 'purchaseOperation.php?action=create_purchase',
                     data: $(this).serialize(),
                     dataType: "json",
                     success: function(res) {
                         if (res.status === 'success') {
                             showSuccess(res.message, function() {
-                                $('#userModal').modal('hide');
+                                $('#purchaseModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -433,41 +572,43 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     }
                 });
             });
-            
             // Edit user record
             $(document).on('click', '.editBtn', function() {
-                const userData = {
+                const purchaseData = {
                     id: $(this).data('id'),
-                    username: $(this).data('username'),
-                    role: $(this).data('role')
+                    supplier_id: $(this).data('supplier_id'),
+                    user_id: $(this).data('user_id'),
+                    purchase_date: $(this).data('purchase_date')
                 };
                 
-                $('#edit_id').val(userData.id);
-                $('#edit_username').val(userData.username);
-                $('#edit_role').val(userData.role);
+                $('#edit_id').val(purchaseData.id);
+                $('#edit_supplier_id').val(purchaseData.supplier_id);
+                $('#edit_user_id').val(purchaseData.user_id);
+                $('#edit_purchase_date').val(purchaseData.purchase_date);
                 
-                $('#edit_userModal').modal('show');
+                $('#edit_purchaseModal').modal('show');
             });
             
             // Update user record
-            $('#edit_userForm').submit(function(e) {
+            $('#edit_purchaseForm').submit(function(e) {
                 e.preventDefault();
                 const submitBtn = $(this).find('[type="submit"]');
                 submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
                 const formData = {
                   edit_id: $('#edit_id').val(),
-                  edit_username: $('#edit_username').val(),
-                  edit_role: $('#edit_role').val()
+                  edit_supplier_id: $('#edit_supplier_id').val(),
+                  edit_user_id: $('#edit_user_id').val(),
+                  edit_purchase_date: $('#edit_purchase_date').val()
                 };
                 $.ajax({
-                    url: 'userOperation.php?action=update_user',
+                    url: 'purchaseOperation.php?action=update_purchase',
                     method: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',
                     success: function(response) {
                         if(response.status === 'success') {
                             showSuccess(response.message, function() {
-                                $('#edit_userModal').modal('hide');
+                                $('#edit_purchaseModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -478,13 +619,14 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                         showError('An error occurred: ' + xhr.statusText);
                     },
                     complete: function() {
-                        submitBtn.prop('disabled', false).html('Update user');
+                        submitBtn.prop('disabled', false).html('Update purchase');
                     }
                 });
             });
+
             // Delete user record
             $(document).on('click', '.deleteBtn', function() {
-                const user_id = $(this).data('id');
+                const purchase_id = $(this).data('id');
                 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -498,8 +640,8 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'POST',
-                            url: 'userOperation.php?action=delete_user',
-                            data: { id: user_id },
+                            url: 'purchaseOperation.php?action=delete_purchase',
+                            data: { id: purchase_id },
                             dataType: 'json',
                             success: function(res) {
                                 if (res.status === 'success') {
@@ -521,7 +663,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
             // Display user data in table
             function displayData() {
                 $.ajax({
-                    url: 'userOperation.php?action=display_user',
+                    url: 'purchaseOperation.php?action=display_purchase',
                     dataType: 'json',
                     success: function(response) {
                         // Check if response is valid and contains data
@@ -534,20 +676,22 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                         response.forEach(row => {
                             tableData += `
                             <tr>
-                                <td>${row.user_id || ''}</td>
-                                <td>${row.username || ''}</td>
-                                <td>${row.password || ''}</td>
-                                <td>${row.role || ''}</td>
-                                <td>${row.created_at || ''}</td>
+                                <td>${row.purchase_id || ''}</td>
+                                <td>${row.supplier_name || ''}</td>
+                                <td>${row.user_name || ''}</td>
+                                <td>${row.purchase_date || ''}</td>
+                                <td>${row.total_amount || ''}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm editBtn" 
-                                        data-id="${row.user_id}" 
-                                        data-username="${row.username}"
-                                        data-role="${row.role}">
+                                        data-id="${row.purchase_id  }" 
+                                        data-supplier_id="${row.supplier_id}"
+                                        data-user_id="${row.user_id}"
+                                        data-purchase_date="${row.purchase_date}"
+                                        data-total_amount="${row.total_amount}">
                                         Edit
                                     </button>
                                     <button class="btn btn-danger btn-sm deleteBtn" 
-                                        data-id="${row.user_id}">
+                                        data-id="${row.purchase_id}">
                                         Delete
                                     </button>
                                 </td>

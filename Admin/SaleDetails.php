@@ -10,6 +10,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
 ?>
 
 
+
 <!doctype html>
 <html lang="en">
 
@@ -247,6 +248,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                 </nav>
             </div>
         </div>
+
         <!-- ============================================================== -->
         <!-- end left sidebar -->
         <!-- ============================================================== -->
@@ -256,64 +258,64 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         <div class="dashboard-wrapper">
             <div class="dashboard-ecommerce">
                 <div class="container-fluid dashboard-content ">
-                    <h2>User Form</h2>
-                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add User</button>
+                    <h2>Sales Details Form</h2>
+                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add Sale Details</button>
                     <br>
                     <br>
                     <table id="dataTable" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <td>ID</td>
-                                <td>UserName</td>
-                                <td>Password</td>
-                                <td>Role</td>
-                                <td>Created at</td>
-                                <td>Actions</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
+                      <thead>
+                          <tr>
+                              <td>ID</td>
+                              <td>Customer Name</td>
+                              <td>Product Name</td>
+                              <td>Quantity</td>
+                              <td>Unit Price</td>
+                              <td>Actions</td>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      </tbody>
                     </table>
                 </div>
                 <!--/   INsert Modal start -->
-                <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="saleDetailsModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add New User</h5>
+                                <h5 class="modal-title">Add New Sales Details</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="userForm" method="POST" action="">
+                                <form id="saleDetailsForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="text" class="form-control" id="username" name="username">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">Password </label>
-                                                <input type="password" class="form-control" id="password" name="password">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">ConfirmPassword </label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="role" id="role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Staff">Staff</option>
+                                                <label for="customer">Customer Name </label>
+                                                <select class="form-control" name="sale_id" id="sale_id">
+                                                  <option value="">Select Customer</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="product">Product Name </label>
+                                                <select class="form-control" name="product_id" id="product_id">
+                                                  <option value="">Select product</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="quantity"> Quantity </label>
+                                                <input type="number" class="form-control" id="quantity" name="quantity">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="price">Unit Price </label>
+                                                <input type="number" class="form-control" id="unit_price" name="unit_price">
                                             </div>
                                         </div>
                                     </div>
@@ -328,40 +330,52 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                 </div>
                 <!--/   INsert Modal end -->
                 <!-- start Update Model  -->
-                <div class="modal fade" id="edit_userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="edit_saleDetailsModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Update Users</h5>
+                                <h5 class="modal-title">Update Sales Details</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="edit_userForm" method="POST" action="">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                                <input type="text" class="form-control" id="edit_username" name="edit_username">
+                                <form id="edit_saleDetailsForm" method="POST" action="">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="customer">Customer Name </label>
+                                                    <input type="hidden" class="form-control" id="edit_id" name="edit_id">
+                                                    <select class="form-control" name="edit_sale_id" id="edit_sale_id">
+                                                    <option value="">Select Customer</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="product">Product Name </label>
+                                                    <select class="form-control" name="edit_product_id" id="edit_product_id">
+                                                    <option value="">Select product</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="quantity"> Quantity </label>
+                                                    <input type="number" class="form-control" id="edit_quantity" name="edit_quantity">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="price">Unit Price </label>
+                                                    <input type="number" class="form-control" id="edit_unit_price" name="edit_unit_price">
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="edit_role" id="edit_role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="admin">admin</option>
-                                                    <option value="staff">staff</option>
-                                                </select>
-                                            </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Update</button>
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Update</button>
-                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -369,6 +383,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                 </div>
                 <!-- Ends Update Model  -->
             </div>
+
             <!-- ============================================================== -->
                                  <!-- footer -->
             <!-- ============================================================== -->
@@ -398,209 +413,276 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
  <script src="../assets/vendor/jquery/jquery-3.3.1.min.js"></script>
  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Initialize modals and load data
-            $('#insertModal').click(function() {
-                $('#userModal').modal('show');
-                $('#userForm')[0].reset();
-            });
-            
-            // Initial data loading
-            displayData();
-            
-            // Create user record
-            $('#userForm').submit(function(e) {
-                e.preventDefault();
-                
-                $.ajax({
-                    type: 'POST',
-                    url: 'userOperation.php?action=create_user',
-                    data: $(this).serialize(),
-                    dataType: "json",
-                    success: function(res) {
-                        if (res.status === 'success') {
-                            showSuccess(res.message, function() {
-                                $('#userModal').modal('hide');
-                                displayData();
-                            });
-                        } else {
-                            showError(res.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        showError('An error occurred: ' + error);
-                    }
-                });
-            });
-            
-            // Edit user record
-            $(document).on('click', '.editBtn', function() {
-                const userData = {
-                    id: $(this).data('id'),
-                    username: $(this).data('username'),
-                    role: $(this).data('role')
-                };
-                
-                $('#edit_id').val(userData.id);
-                $('#edit_username').val(userData.username);
-                $('#edit_role').val(userData.role);
-                
-                $('#edit_userModal').modal('show');
-            });
-            
-            // Update user record
-            $('#edit_userForm').submit(function(e) {
-                e.preventDefault();
-                const submitBtn = $(this).find('[type="submit"]');
-                submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
-                const formData = {
-                  edit_id: $('#edit_id').val(),
-                  edit_username: $('#edit_username').val(),
-                  edit_role: $('#edit_role').val()
-                };
-                $.ajax({
-                    url: 'userOperation.php?action=update_user',
-                    method: 'POST',
-                    data: $(this).serialize(),
-                    dataType: 'json',
-                    success: function(response) {
-                        if(response.status === 'success') {
-                            showSuccess(response.message, function() {
-                                $('#edit_userModal').modal('hide');
-                                displayData();
-                            });
-                        } else {
-                            showError(response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        showError('An error occurred: ' + xhr.statusText);
-                    },
-                    complete: function() {
-                        submitBtn.prop('disabled', false).html('Update user');
-                    }
-                });
-            });
-            // Delete user record
-            $(document).on('click', '.deleteBtn', function() {
-                const user_id = $(this).data('id');
-                
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: 'POST',
-                            url: 'userOperation.php?action=delete_user',
-                            data: { id: user_id },
-                            dataType: 'json',
-                            success: function(res) {
-                                if (res.status === 'success') {
-                                    showSuccess(res.message, function() {
-                                        displayData();
-                                    });
-                                } else {
-                                    showError(res.message);
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                showError('An error occurred: ' + error);
-                            }
-                        });
-                    }
-                });
-            });
-            
-            // Display user data in table
-            function displayData() {
-                $.ajax({
-                    url: 'userOperation.php?action=display_user',
-                    dataType: 'json',
-                    success: function(response) {
-                        // Check if response is valid and contains data
-                        if (!response || !Array.isArray(response)) {
-                            showError('Invalid data received from server');
-                            return;
-                        }
-                        
-                        let tableData = '';
-                        response.forEach(row => {
-                            tableData += `
-                            <tr>
-                                <td>${row.user_id || ''}</td>
-                                <td>${row.username || ''}</td>
-                                <td>${row.password || ''}</td>
-                                <td>${row.role || ''}</td>
-                                <td>${row.created_at || ''}</td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm editBtn" 
-                                        data-id="${row.user_id}" 
-                                        data-username="${row.username}"
-                                        data-role="${row.role}">
-                                        Edit
-                                    </button>
-                                    <button class="btn btn-danger btn-sm deleteBtn" 
-                                        data-id="${row.user_id}">
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>`;
-                        });
-                        
-                        // Check if DataTable exists before destroying
-                        if ($.fn.DataTable && $.fn.DataTable.isDataTable('#dataTable')) {
-                            $('#dataTable').DataTable().destroy();
-                        }
-                        
-                        $('#dataTable tbody').html(tableData);
-                        initDataTable();
-                    },
-                    error: function(xhr, status, error) {
-                        showError('Failed to load user data: ' + error);
-                    }
-                });
-            }
-            
-            // Initialize DataTable
-            function initDataTable() {
-                $('#dataTable').DataTable({
-                    paging: true,
-                    searching: true,
-                    ordering: true,
-                    responsive: true
-                });
-            }
+ <!-- Ku dar jsPDF CDN haddii aad rabto PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-            
-            // Helper function to show success messages
-            function showSuccess(message, callback) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: message,
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    timer: 3000
-                }).then(callback);
-            }
-            
-            // Helper function to show error messages
-            function showError(message) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: message,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
+<script>
+    $(document).ready(function() {
+        // Initialize modals and load data
+        $('#insertModal').click(function() {
+            $('#saleDetailsModal').modal('show');
+            $('#saleDetailsForm')[0].reset();
         });
-    </script>
+        
+        // Initial data loading
+        displayData();
+        loadCustomer();
+        loadProduct();
+
+        // Load passenger for dropdown
+        function loadCustomer() {
+            $.ajax({
+                url: 'saleDetailOperation.php?action=get_customer',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if(response.status === 'success' && response.data) {
+                        const $select = $('#sale_id, #edit_sale_id');
+                        $select.empty().append('<option value="">Select customer</option>');
+                        
+                        response.data.forEach(purchase => {
+                            $select.append($('<option>', {
+                                value: purchase.sale_id,
+                                text: purchase.customer_name
+                            }));
+                        });
+                    } else {
+                        showError('Failed to load customer');
+                    }
+                },
+                error: function() {
+                    showError('Network error loading customer');
+                }
+            });
+        }
+        // Load flight for dropdown
+        function loadProduct() {
+            $.ajax({
+                url: 'saleDetailOperation.php?action=get_product',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if(response.status === 'success' && response.data) {
+                        const $select = $('#product_id, #edit_product_id');
+                        $select.empty().append('<option value="">Select product</option>');
+                        
+                        response.data.forEach(product => {
+                            $select.append($('<option>', {
+                                value: product.product_id,
+                                text: product.product_name,
+                            }));
+                        });
+                    } else {
+                        showError('Failed to load product');
+                    }
+                },
+                error: function() {
+                    showError('Network error loading product');
+                }
+            });
+        }
+
+        // Create user record
+        $('#saleDetailsForm').submit(function(e) {
+            e.preventDefault();
+            
+            $.ajax({
+                type: 'POST',
+                url: 'saleDetailOperation.php?action=create_saleDetail',
+                data: $(this).serialize(),
+                dataType: "json",
+                success: function(res) {
+                    if (res.status === 'success') {
+                        showSuccess(res.message, function() {
+                            $('#saleDetailsModal').modal('hide');
+                            displayData();
+                        });
+                    } else {
+                        showError(res.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showError('An error occurred: ' + error);
+                }
+            });
+        });
+        // Edit user record
+        $(document).on('click', '.editBtn', function() {
+            const saleDetailsData = {
+                id: $(this).data('id'),
+                sale_id: $(this).data('sale_id'),
+                product_id: $(this).data('product_id'),
+                quantity: $(this).data('quantity'),
+                unit_price: $(this).data('unit_price')
+            };
+            
+            $('#edit_id').val(saleDetailsData.id);
+            $('#edit_sale_id').val(saleDetailsData.sale_id);
+            $('#edit_product_id').val(saleDetailsData.product_id);
+            $('#edit_quantity').val(saleDetailsData.quantity);
+            $('#edit_unit_price').val(saleDetailsData.unit_price);
+            
+            $('#edit_saleDetailsModal').modal('show');
+        });
+        
+        // Update user record
+        $('#edit_saleDetailsForm').submit(function(e) {
+            e.preventDefault();
+            const submitBtn = $(this).find('[type="submit"]');
+            submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
+            const formData = {
+                edit_id: $('#edit_id').val(),
+                edit_sale_id: $('#edit_sale_id').val(),
+                edit_product_id: $('#edit_product_id').val(),
+                edit_quantity: $('#edit_quantity').val(),
+                edit_unit_price: $('#edit_unit_price').val()
+            };
+            $.ajax({
+                url: 'saleDetailOperation.php?action=update_saleDetail',
+                method: 'POST',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    if(response.status === 'success') {
+                        showSuccess(response.message, function() {
+                            $('#edit_saleDetailsModal').modal('hide');
+                            displayData();
+                        });
+                    } else {
+                        showError(response.message);
+                    }
+                },
+                error: function(xhr) {
+                    showError('An error occurred: ' + xhr.statusText);
+                },
+                complete: function() {
+                    submitBtn.prop('disabled', false).html('Update sale Detail');
+                }
+            });
+        });
+        // Delete user record
+        $(document).on('click', '.deleteBtn', function() {
+            const saleDetail_id = $(this).data('id');
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'saleDetailOperation.php?action=delete_saleDetail',
+                        data: { id: saleDetail_id },
+                        dataType: 'json',
+                        success: function(res) {
+                            if (res.status === 'success') {
+                                showSuccess(res.message, function() {
+                                    displayData();
+                                });
+                            } else {
+                                showError(res.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            showError('An error occurred: ' + error);
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Display user data in table
+        function displayData() {
+            $.ajax({
+                url: 'saleDetailOperation.php?action=display_saleDetail',
+                dataType: 'json',
+                success: function(response) {
+                    // Check if response is valid and has 'data' key as array
+                    if (!response || response.status !== 'success' || !Array.isArray(response.data)) {
+                        showError('Invalid data received from server');
+                        return;
+                    }
+
+                    let tableData = '';
+                    response.data.forEach(row => {
+                        tableData += `
+                        <tr>
+                            <td>${row.detail_id || ''}</td>
+                            <td>${row.customer_name || ''}</td>
+                            <td>${row.product_name || ''}</td>
+                            <td>${row.quantity || ''}</td>
+                            <td>${row.unit_price || ''}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm editBtn" 
+                                    data-id="${row.detail_id}" 
+                                    data-sale_id="${row.sale_id}"
+                                    data-product_id="${row.product_id}"
+                                    data-quantity="${row.quantity}"
+                                    data-unit_price="${row.unit_price}">
+                                    Edit
+                                </button>
+                                <button class="btn btn-danger btn-sm deleteBtn" 
+                                    data-id="${row.detail_id}">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>`;
+                    });
+
+                    // Destroy existing DataTable instance
+                    if ($.fn.DataTable && $.fn.DataTable.isDataTable('#dataTable')) {
+                        $('#dataTable').DataTable().destroy();
+                    }
+
+                    $('#dataTable tbody').html(tableData);
+                    initDataTable();
+                },
+                error: function(xhr, status, error) {
+                    showError('Failed to load purchase details: ' + error);
+                }
+            });
+        }
+
+        
+        // Initialize DataTable
+        function initDataTable() {
+            $('#dataTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                responsive: true
+            });
+        }
+
+        
+        // Helper function to show success messages
+        function showSuccess(message, callback) {
+            Swal.fire({
+                title: 'Success!',
+                text: message,
+                icon: 'success',
+                confirmButtonText: 'OK',
+                timer: 3000
+            }).then(callback);
+        }
+        
+        // Helper function to show error messages
+        function showError(message) {
+            Swal.fire({
+                title: 'Error!',
+                text: message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+</script>
     
     <!-- bootstap bundle js -->
     <!-- slimscroll js -->

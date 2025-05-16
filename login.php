@@ -20,8 +20,8 @@
         <h3 class="text-center">Login</h3>
         <form id="loginForm">
             <div class="mb-3">
-                <label for="email" class="form-label">Username or Email</label>
-                <input type="text" class="form-control" id="email" name="email" >
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" >
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
@@ -67,8 +67,6 @@ $(document).ready(function () {
               window.location.href = "index.php";
             } else if (role === "staff") {
               window.location.href = "staff_dashboard.php";
-            } else if (role === "passenger") {
-              window.location.href = "passenger_dashboard.php";
             }
 
           });

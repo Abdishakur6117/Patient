@@ -9,20 +9,20 @@ try {
     $conn = $db->getConnection();
     
     switch ($action) {          
-        case 'display_user':
-            display_user($conn);
+        case 'display_category':
+            display_category($conn);
             break;
             
-        case 'create_user':
-            create_user($conn);
+        case 'create_category':
+            create_category($conn);
             break;
             
-        case 'update_user':
-            update_user($conn);
+        case 'update_category':
+            update_category($conn);
             break;
             
-        case 'delete_user':
-            delete_user($conn);
+        case 'delete_category':
+            delete_category($conn);
             break;
             
         default:
@@ -40,23 +40,21 @@ try {
     ]);
 }
 
-function display_user($conn) {
+function display_category($conn) {
     $query = "
         SELECT 
-            user_id,
-            username,
-            password,
-            role,
-            created_at
-        FROM users 
+            category_id,
+            name,
+            description
+        FROM categories 
     ";
     
     $stmt = $conn->query($query);
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 
-function create_user($conn) {
-    $required = ['username', 'password','confirmPassword','role'];
+function create_category($conn) {
+    $required = ['Category_name', 'description'];
     $data = [];
     
     foreach ($required as $field) {
@@ -68,47 +66,43 @@ function create_user($conn) {
 
     // Check for duplicate username 
     $stmt = $conn->prepare("
-        SELECT user_id FROM users 
-        WHERE username = ?  
+        SELECT category_id FROM categories 
+        WHERE name = ?  
     ");
-    $stmt->execute([$data['username']]);
+    $stmt->execute([$data['Category_name']]);
     if ($stmt->rowCount() > 0) {
-        throw new Exception('users record already exists for this username');
-    }
-     if ($data['password'] !== $data['confirmPassword']) {
-    throw new Exception('Passwords do not match');
+        throw new Exception('Category record already exists for this Category Name');
     }
     // Insert record
     $stmt = $conn->prepare("
-        INSERT INTO users 
-        (username, password,role) 
-        VALUES (?, ?, ?)
+        INSERT INTO categories 
+        (name, description) 
+        VALUES (?, ?)
     ");
     
     $success = $stmt->execute([
-        $data['username'],
-        $data['password'],
-        $data['role']
+        $data['Category_name'],
+        $data['description']
     ]);
     
     if ($success) {
         echo json_encode([
             'status' => 'success',
-            'message' => 'users recorded successfully'
+            'message' => 'Category recorded successfully'
         ]);
     } else {
-        throw new Exception('Failed to record users');
+        throw new Exception('Failed to record Category');
     }
 }
 
-function update_user($conn) {
+function update_category($conn) {
     // Accept both 'edit_id' and 'id' as the identifier
     $id = $_POST['edit_id'] ?? $_POST['id'] ?? null;
     
     $required = [
         'id' => $id,
-        'username' => $_POST['edit_username'] ?? null,
-        'role' => $_POST['edit_role'] ?? null
+        'category Name' => $_POST['edit_Category_name'] ?? null,
+        'description' => $_POST['edit_description'] ?? null
     ];
     
     // Validate required fields
@@ -120,55 +114,55 @@ function update_user($conn) {
     
     // Check for duplicate (excluding current record)
     $stmt = $conn->prepare("
-        SELECT user_id FROM users 
-        WHERE username = ?  AND user_id != ?
+        SELECT category_id FROM categories 
+        WHERE name = ?  AND category_id != ?
     ");
     $stmt->execute([
-        $required['username'],
+        $required['category Name'],
         $required['id']
     ]);
     if ($stmt->rowCount() > 0) {
-        throw new Exception('A user with this username already exists.');
+        throw new Exception('A Category with this Category Name already exists.');
     }
     // Update record
     $stmt = $conn->prepare("
-        UPDATE users SET
-            username = ?,
-            role = ?
-        WHERE user_id = ?
+        UPDATE categories SET
+            name = ?,
+            description = ?
+        WHERE category_id = ?
     ");
     
     $success = $stmt->execute([
-        $required['username'],
-        $required['role'],
+        $required['category Name'],
+        $required['description'],
         $required['id']
     ]);
     
     if ($success) {
         echo json_encode([
             'status' => 'success',
-            'message' => 'user updated successfully'
+            'message' => 'category updated successfully'
         ]);
     } else {
-        throw new Exception('Failed to update user');
+        throw new Exception('Failed to update category');
     }
 }
 
-function delete_user($conn) {
+function delete_category($conn) {
     if (empty($_POST['id'])) {
-        throw new Exception('User ID is required');
+        throw new Exception('Category ID is required');
     }
     
-    $stmt = $conn->prepare("DELETE FROM users WHERE user_id = ?");
+    $stmt = $conn->prepare("DELETE FROM categories WHERE category_id = ?");
     $success = $stmt->execute([$_POST['id']]);
     
     if ($success) {
         echo json_encode([
             'status' => 'success',
-            'message' => 'user deleted successfully'
+            'message' => 'category deleted successfully'
         ]);
     } else {
-        throw new Exception('Failed to delete user');
+        throw new Exception('Failed to delete category');
     }
 }
 ?>

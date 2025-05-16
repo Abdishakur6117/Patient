@@ -10,12 +10,13 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
 
 // Tirada wax kasta
 $totalUsers = $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0];
-$totalPassengers = $conn->query("SELECT COUNT(*) FROM passengers")->fetch_row()[0];
-$totalAircrafts = $conn->query("SELECT COUNT(*) FROM aircrafts")->fetch_row()[0];
-$totalFlights = $conn->query("SELECT COUNT(*) FROM flights")->fetch_row()[0];
-$totalBookings = $conn->query("SELECT COUNT(*) FROM bookings")->fetch_row()[0];
-$totalPayments = $conn->query("SELECT COUNT(*) FROM payments")->fetch_row()[0];
-$totalTickets = $conn->query("SELECT COUNT(*) FROM tickets")->fetch_row()[0];
+$totalCategories = $conn->query("SELECT COUNT(*) FROM categories")->fetch_row()[0];
+$totalProducts = $conn->query("SELECT COUNT(*) FROM products")->fetch_row()[0];
+$totalSuppliers = $conn->query("SELECT COUNT(*) FROM suppliers")->fetch_row()[0];
+$totalPurchases = $conn->query("SELECT COUNT(*) FROM purchases")->fetch_row()[0];
+$totalPurchaseDetails = $conn->query("SELECT COUNT(*) FROM purchaseDetails")->fetch_row()[0];
+$totalSales = $conn->query("SELECT COUNT(*) FROM sales")->fetch_row()[0];
+$totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row()[0];
 ?>
 
 <!doctype html>
@@ -35,7 +36,7 @@ $totalTickets = $conn->query("SELECT COUNT(*) FROM tickets")->fetch_row()[0];
     <link rel="stylesheet" href="assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="assets/vendor/charts/c3charts/c3.css">
     <link rel="stylesheet" href="assets/vendor/fonts/flag-icon-css/flag-icon.min.css">
-    <title>Online Airline</title>
+    <title>Stock Management System</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
@@ -46,6 +47,16 @@ $totalTickets = $conn->query("SELECT COUNT(*) FROM tickets")->fetch_row()[0];
         height: 100vh;
         overflow-y: auto;
         overflow-x: hidden;
+    }
+
+    .nav-left-sidebar.sidebar-dark {
+        overflow-y: auto;
+        height: 100vh;
+        position: fixed;
+    }
+
+    .menu-list {
+        padding-bottom: 100px;
     }
 
     </style>
@@ -61,7 +72,7 @@ $totalTickets = $conn->query("SELECT COUNT(*) FROM tickets")->fetch_row()[0];
         <!-- ============================================================== -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="index.php">Online Airline</a>
+                <a class="navbar-brand" href="index.php">Stock Management System</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -96,20 +107,23 @@ $totalTickets = $conn->query("SELECT COUNT(*) FROM tickets")->fetch_row()[0];
             <div class="menu-list">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <a class="d-xl-none d-lg-none" href="#">Dashboard</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav flex-column">
-                            <!-- Dashboard -->
                             <li class="nav-item">
-                                <a class="nav-link" href="index.php"><i class="fa fa-tachometer-alt"></i> Dashboard</a>
+                                <a class="nav-link margin-top-10" href="index.php">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
                             </li>
 
                             <!-- Users -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-users">
-                                    <i class="fa fa-users"></i> Users
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-users"
+                                    aria-expanded="false" aria-controls="submenu-users">
+                                    <i class="fas fa-users"></i> Users
                                 </a>
                                 <div id="submenu-users" class="collapse submenu">
                                     <ul class="nav flex-column">
@@ -120,85 +134,106 @@ $totalTickets = $conn->query("SELECT COUNT(*) FROM tickets")->fetch_row()[0];
                                 </div>
                             </li>
 
-                            <!-- Passengers -->
+                            <!-- Categories -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-passengers">
-                                    <i class="fa fa-user-friends"></i> Passengers
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-categories"
+                                    aria-expanded="false" aria-controls="submenu-categories">
+                                    <i class="fas fa-tags"></i> Categories
                                 </a>
-                                <div id="submenu-passengers" class="collapse submenu">
+                                <div id="submenu-categories" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/passenger.php">List Passengers</a>
+                                            <a class="nav-link" href="Admin/Category.php">List Categories</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Aircrafts -->
+                            <!-- Products -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-aircrafts">
-                                    <i class="fa fa-plane"></i> Aircrafts
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-products"
+                                    aria-expanded="false" aria-controls="submenu-products">
+                                    <i class="fas fa-boxes"></i> Products
                                 </a>
-                                <div id="submenu-aircrafts" class="collapse submenu">
+                                <div id="submenu-products" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/aircraft.php">List Aircrafts</a>
+                                            <a class="nav-link" href="Admin/Products.php">List Products</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Flights -->
+                            <!-- Suppliers -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-flights">
-                                    <i class="fa fa-plane-departure"></i> Flights
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-suppliers"
+                                    aria-expanded="false" aria-controls="submenu-suppliers">
+                                    <i class="fas fa-truck"></i> Suppliers
                                 </a>
-                                <div id="submenu-flights" class="collapse submenu">
+                                <div id="submenu-suppliers" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/flight.php">List Flights</a>
+                                            <a class="nav-link" href="Admin/Supplier.php">List Suppliers</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Bookings -->
+                            <!-- Purchases -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-booking">
-                                    <i class="fa fa-book"></i> Bookings
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-purchases"
+                                    aria-expanded="false" aria-controls="submenu-purchases">
+                                    <i class="fas fa-shopping-cart"></i> Purchases
                                 </a>
-                                <div id="submenu-booking" class="collapse submenu">
+                                <div id="submenu-purchases" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/Booking.php">List Bookings</a>
+                                            <a class="nav-link" href="Admin/Purchase.php">List Purchases</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Payments -->
+                            <!-- Purchase Details -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-payments">
-                                    <i class="fa fa-credit-card"></i> Payments
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-purchase-details"
+                                    aria-expanded="false" aria-controls="submenu-purchase-details">
+                                    <i class="fas fa-file-invoice"></i> Purchase Details
                                 </a>
-                                <div id="submenu-payments" class="collapse submenu">
+                                <div id="submenu-purchase-details" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/payment.php">List Payments</a>
+                                            <a class="nav-link" href="Admin/PurchaseDetails.php">List Purchase Details</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Tickets -->
+                            <!-- Sales -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-tickets">
-                                    <i class="fa fa-ticket-alt"></i> Tickets <span class="badge badge-secondary">New</span>
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-sales"
+                                    aria-expanded="false" aria-controls="submenu-sales">
+                                    <i class="fas fa-dollar-sign"></i> Sales
                                 </a>
-                                <div id="submenu-tickets" class="collapse submenu">
+                                <div id="submenu-sales" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/ticket.php">List Tickets</a>
+                                            <a class="nav-link" href="Admin/Sale.php">List Sales</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <!-- Sale Details -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-sale-details"
+                                    aria-expanded="false" aria-controls="submenu-sale-details">
+                                    <i class="fas fa-receipt"></i> Sale Details
+                                </a>
+                                <div id="submenu-sale-details" class="collapse submenu">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="Admin/SaleDetails.php">List Sale Details</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -206,17 +241,19 @@ $totalTickets = $conn->query("SELECT COUNT(*) FROM tickets")->fetch_row()[0];
 
                             <!-- Reports -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-reports">
-                                    <i class="fa fa-chart-line"></i> Reports
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-reports"
+                                    aria-expanded="false" aria-controls="submenu-reports">
+                                    <i class="fas fa-chart-bar"></i> Reports
                                 </a>
                                 <div id="submenu-reports" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/passengerReport.php">Passenger Report</a>
+                                            <a class="nav-link" href="Admin/supplierReport.php">Supplier Report</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
+
                         </ul>
                     </div>
                 </nav>
@@ -261,86 +298,100 @@ $totalTickets = $conn->query("SELECT COUNT(*) FROM tickets")->fetch_row()[0];
                                 </div>
                             </div>
 
-                            <!-- Passengers -->
+                            <!-- Categories -->
                             <div class="col-md-3 mb-4">
                                 <div class="card text-white bg-success">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Passengers</h5>
-                                            <h3><?php echo $totalPassengers; ?></h3>
+                                            <h5 class="card-title">Categories</h5>
+                                            <h3><?php echo $totalCategories; ?></h3>
                                         </div>
-                                        <i class="fa fa-user-friends fa-2x"></i>
+                                        <i class="fa fa-tags fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Aircrafts -->
+                            <!-- Products -->
                             <div class="col-md-3 mb-4">
                                 <div class="card text-white bg-info">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Aircrafts</h5>
-                                            <h3><?php echo $totalAircrafts; ?></h3>
+                                            <h5 class="card-title">Products</h5>
+                                            <h3><?php echo $totalProducts; ?></h3>
                                         </div>
-                                        <i class="fa fa-plane fa-2x"></i>
+                                        <i class="fa fa-boxes fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Flights -->
+                            <!-- Suppliers -->
                             <div class="col-md-3 mb-4">
                                 <div class="card text-white bg-warning">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Flights</h5>
-                                            <h3><?php echo $totalFlights; ?></h3>
+                                            <h5 class="card-title">Suppliers</h5>
+                                            <h3><?php echo $totalSuppliers; ?></h3>
                                         </div>
-                                        <i class="fa fa-plane-departure fa-2x"></i>
+                                        <i class="fa fa-truck fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Bookings -->
+                            <!-- Purchases -->
                             <div class="col-md-3 mb-4">
                                 <div class="card text-white bg-danger">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Bookings</h5>
-                                            <h3><?php echo $totalBookings; ?></h3>
+                                            <h5 class="card-title">Purchases</h5>
+                                            <h3><?php echo $totalPurchases; ?></h3>
                                         </div>
-                                        <i class="fa fa-book fa-2x"></i>
+                                        <i class="fa fa-shopping-cart fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Payments -->
+                            <!-- Purchase Details -->
                             <div class="col-md-3 mb-4">
                                 <div class="card text-white bg-secondary">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Payments</h5>
-                                            <h3><?php echo $totalPayments; ?></h3>
+                                            <h5 class="card-title">Purchase Details</h5>
+                                            <h3><?php echo $totalPurchaseDetails; ?></h3>
                                         </div>
-                                        <i class="fa fa-credit-card fa-2x"></i>
+                                        <i class="fa fa-file-invoice fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Tickets -->
+                            <!-- Sales -->
                             <div class="col-md-3 mb-4">
                                 <div class="card text-white bg-dark">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Tickets</h5>
-                                            <h3><?php echo $totalTickets; ?></h3>
+                                            <h5 class="card-title">Sales</h5>
+                                            <h3><?php echo $totalSales; ?></h3>
                                         </div>
-                                        <i class="fa fa-ticket-alt fa-2x"></i>
+                                        <i class="fa fa-dollar-sign fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sale Details -->
+                            <div class="col-md-3 mb-4">
+                                <div class="card text-white bg-dark">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Sale Details</h5>
+                                            <h3><?php echo $totalSaleDetails; ?></h3>
+                                        </div>
+                                        <i class="fa fa-receipt fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </div>
+
                 </div>
             </div>
             <!-- ============================================================== -->
