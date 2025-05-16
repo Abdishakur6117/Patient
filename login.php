@@ -31,12 +31,6 @@
                 <button type="submit" class="btn btn-primary  form-control">Login</button>
             </div>
         </form>
-        <p class="text-center text-sm text-gray-600 mt-2">
-        Don't have an account?
-        <a href="register.php" class="text-green-500 font-semibold"
-          >Signup</a
-        >
-      </p>
     </div>
 </div>
 
