@@ -30,12 +30,11 @@ $query = "
         p.purchase_id,
         p.purchase_date,
         pr.name AS product_name,
-        pd.quantity,
-        pd.unit_price
+        p.quantity,
+        p.unit_price
     FROM suppliers s
     LEFT JOIN purchases p ON s.supplier_id = p.supplier_id
-    LEFT JOIN purchaseDetails pd ON p.purchase_id = pd.purchase_id
-    LEFT JOIN products pr ON pd.product_id = pr.product_id
+    LEFT JOIN products pr ON p.product_id = pr.product_id
     WHERE s.supplier_id = :supplier_id
 ";
 

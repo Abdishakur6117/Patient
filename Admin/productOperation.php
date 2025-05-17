@@ -80,16 +80,6 @@ function create_product($conn) {
         }
         $data[$field] = $_POST[$field];
     }
-
-    // Check for duplicate username 
-    $stmt = $conn->prepare("
-        SELECT product_id FROM products 
-        WHERE category_id = ?  
-    ");
-    $stmt->execute([$data['category_id']]);
-    if ($stmt->rowCount() > 0) {
-        throw new Exception('product record already exists for this category Name');
-    }
     // Insert record
     $stmt = $conn->prepare("
         INSERT INTO products 
@@ -134,19 +124,6 @@ function update_product($conn) {
             throw new Exception(ucfirst(str_replace('_', ' ', $field)) . ' is required');
         }
     }
-    
-    // Check for duplicate (excluding current record)
-    $stmt = $conn->prepare("
-        SELECT product_id FROM products 
-        WHERE category_id = ?  AND product_id != ?
-    ");
-    $stmt->execute([
-        $required['category_id'],
-        $required['id']
-    ]);
-    if ($stmt->rowCount() > 0) {
-        throw new Exception('A product with this category name already exists.');
-    }
     // Update record
     $stmt = $conn->prepare("
         UPDATE products SET
@@ -179,19 +156,38 @@ function update_product($conn) {
 
 function delete_product($conn) {
     if (empty($_POST['id'])) {
-        throw new Exception('product ID is required');
+        throw new Exception('Product ID is required');
     }
-    
-    $stmt = $conn->prepare("DELETE FROM products WHERE product_id = ?");
-    $success = $stmt->execute([$_POST['id']]);
-    
-    if ($success) {
+
+    $product_id = $_POST['id'];
+
+    try {
+        $conn->beginTransaction();
+
+        // 1. Delete sales related to this product
+        $stmtSales = $conn->prepare("DELETE FROM sales WHERE product_id = ?");
+        $stmtSales->execute([$product_id]);
+
+        // 2. Delete the product itself
+        $stmtProduct = $conn->prepare("DELETE FROM products WHERE product_id = ?");
+        $success = $stmtProduct->execute([$product_id]);
+
+        if ($success) {
+            $conn->commit();
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Product and related sales deleted successfully'
+            ]);
+        } else {
+            $conn->rollBack();
+            throw new Exception('Failed to delete product');
+        }
+    } catch (Exception $e) {
+        $conn->rollBack();
         echo json_encode([
-            'status' => 'success',
-            'message' => 'product deleted successfully'
+            'status' => 'error',
+            'message' => $e->getMessage()
         ]);
-    } else {
-        throw new Exception('Failed to delete product');
     }
 }
 ?>

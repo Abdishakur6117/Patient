@@ -182,21 +182,6 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                 </div>
                             </li>
 
-                            <!-- Purchase Details -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-purchase-details"
-                                    aria-expanded="false" aria-controls="submenu-purchase-details">
-                                    <i class="fas fa-file-invoice"></i> Purchase Details
-                                </a>
-                                <div id="submenu-purchase-details" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/PurchaseDetails.php">List Purchase Details</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
                             <!-- Sales -->
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-sales"
@@ -207,21 +192,6 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
                                             <a class="nav-link" href="../Admin/Sale.php">List Sales</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
-                            <!-- Sale Details -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-sale-details"
-                                    aria-expanded="false" aria-controls="submenu-sale-details">
-                                    <i class="fas fa-receipt"></i> Sale Details
-                                </a>
-                                <div id="submenu-sale-details" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/SaleDetails.php">List Sale Details</a>
                                         </li>
                                     </ul>
                                 </div>

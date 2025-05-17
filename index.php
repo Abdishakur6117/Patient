@@ -14,9 +14,7 @@ $totalCategories = $conn->query("SELECT COUNT(*) FROM categories")->fetch_row()[
 $totalProducts = $conn->query("SELECT COUNT(*) FROM products")->fetch_row()[0];
 $totalSuppliers = $conn->query("SELECT COUNT(*) FROM suppliers")->fetch_row()[0];
 $totalPurchases = $conn->query("SELECT COUNT(*) FROM purchases")->fetch_row()[0];
-$totalPurchaseDetails = $conn->query("SELECT COUNT(*) FROM purchaseDetails")->fetch_row()[0];
 $totalSales = $conn->query("SELECT COUNT(*) FROM sales")->fetch_row()[0];
-$totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row()[0];
 ?>
 
 <!doctype html>
@@ -194,21 +192,6 @@ $totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row(
                                 </div>
                             </li>
 
-                            <!-- Purchase Details -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-purchase-details"
-                                    aria-expanded="false" aria-controls="submenu-purchase-details">
-                                    <i class="fas fa-file-invoice"></i> Purchase Details
-                                </a>
-                                <div id="submenu-purchase-details" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="Admin/PurchaseDetails.php">List Purchase Details</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
                             <!-- Sales -->
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-sales"
@@ -223,22 +206,6 @@ $totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row(
                                     </ul>
                                 </div>
                             </li>
-
-                            <!-- Sale Details -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-sale-details"
-                                    aria-expanded="false" aria-controls="submenu-sale-details">
-                                    <i class="fas fa-receipt"></i> Sale Details
-                                </a>
-                                <div id="submenu-sale-details" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="Admin/SaleDetails.php">List Sale Details</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
                             <!-- Reports -->
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-reports"

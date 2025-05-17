@@ -264,9 +264,11 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                             <tr>
                                 <td>ID</td>
                                 <td>Customer Name</td>
-                                <td>User Name</td>
+                                <td>Product Name</td>
                                 <td>Sale Date</td>
-                                <td>Total Amount</td>
+                                <td>Quantity</td>
+                                <td>Unit Price</td>
+                                <td>User Name</td>
                                 <td>Actions</td>
                             </tr>
                         </thead>
@@ -295,9 +297,9 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="user">User Name </label>
-                                                <select class="form-control" name="user_id" id="user_id">
-                                                    <option value="">Select User</option>
+                                                <label for="product">Product Name </label>
+                                                <select class="form-control" name="product_id" id="product_id">
+                                                    <option value="">Select product</option>
                                                     <!-- Populate this dynamically using backend data -->
                                                 </select>
                                             </div>
@@ -310,8 +312,14 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="total">Total Amount </label>
-                                                <input type="number" class="form-control" id="total_amount" name="total_amount">
+                                                <label for="quantity">Quantity </label>
+                                                <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="price">Price </label>
+                                                <input type="number" class="form-control" id="unit_price" name="unit_price" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -348,9 +356,9 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="user">User Name </label>
-                                                    <select class="form-control" name="edit_user_id" id="edit_user_id">
-                                                        <option value="">Select User</option>
+                                                    <label for="product">Product Name </label>
+                                                    <select class="form-control" name="edit_product_id" id="edit_product_id">
+                                                        <option value="">Select product</option>
                                                         <!-- Populate this dynamically using backend data -->
                                                     </select>
                                                 </div>
@@ -363,8 +371,14 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="total">Total Amount </label>
-                                                    <input type="number" class="form-control" id="edit_total_amount" name="edit_total_amount">
+                                                    <label for="quantity">Quantity </label>
+                                                    <input type="number" class="form-control" id="edit_quantity" name="edit_quantity" value="1" min="1">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="price">Price </label>
+                                                    <input type="number" class="form-control" id="edit_unit_price" name="edit_unit_price" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -417,22 +431,23 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
             
             // Initial data loading
             displayData();
-            loadUser();
-            //user load 
-            function loadUser() {
+            loadProduct();
+            //product load 
+            function loadProduct() {
                 $.ajax({
-                    url: 'saleOperation.php?action=get_user',
+                    url: 'saleOperation.php?action=get_product',
                     method: 'GET',
                     dataType: 'json',
                     success: function(response) {
                         if(response.status === 'success' && response.data) {
-                            const $select = $('#user_id, #edit_user_id');
-                            $select.empty().append('<option value="">Select User</option>');
+                            const $select = $('#product_id, #edit_product_id');
+                            $select.empty().append('<option value="">Select product</option>');
                             
-                            response.data.forEach(user => {
+                            response.data.forEach(product => {
                                 $select.append($('<option>', {
-                                    value: user.user_id,
-                                    text: user.username
+                                    value: product.product_id,
+                                    text: product.name,
+                                    'data-price': product.price,
                                 }));
                             });
                         } else {
@@ -444,6 +459,29 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     }
                 });
             }
+            function calculateTotal(productSelector, quantitySelector, priceOutputSelector) {
+                const originalPrice = parseFloat($(productSelector + ' option:selected').data('price')) || 0;
+                const quantity = parseInt($(quantitySelector).val()) || 1;
+                const total = originalPrice * quantity;
+                $(priceOutputSelector).val(total.toFixed(2));
+            }
+
+            // Marka product la doorto (add form)
+            $('#product_id').on('change', function () {
+                const selectedOption = $(this).find('option:selected');
+                const price = selectedOption.data('price');
+                if (price !== undefined) {
+                    calculateTotal('#product_id', '#quantity', '#unit_price');
+                } else {
+                    $('#unit_price').val('');
+                }
+            });
+
+            // Marka quantity la beddelo (add form)
+            $('#quantity').on('input', function () {
+                calculateTotal('#product_id', '#quantity', '#unit_price');
+            });
+
             // Create user record
             $('#saleForm').submit(function(e) {
                 e.preventDefault();
@@ -468,21 +506,32 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     }
                 });
             });
+            // Marka product la doorto (edit form)
+            $('#edit_product_id').on('change', function () {
+                calculateTotal('#edit_product_id', '#edit_quantity', '#edit_unit_price');
+            });
+
+            // Marka quantity la beddelo (edit form)
+            $('#edit_quantity').on('input', function () {
+                calculateTotal('#edit_product_id', '#edit_quantity', '#edit_unit_price');
+            });
             // Edit user record
             $(document).on('click', '.editBtn', function() {
                 const saleData = {
                     id: $(this).data('id'),
                     customer_name: $(this).data('customer_name'),
-                    user_id: $(this).data('user_id'),
+                    product_id: $(this).data('product_id'),
                     sale_date: $(this).data('sale_date'),
-                    total_amount: $(this).data('total_amount')
+                    quantity: $(this).data('quantity'),
+                    unit_price: $(this).data('unit_price'),
                 };
                 
                 $('#edit_id').val(saleData.id);
                 $('#edit_customer_name').val(saleData.customer_name);
-                $('#edit_user_id').val(saleData.user_id);
+                $('#edit_product_id').val(saleData.product_id);
                 $('#edit_sale_date').val(saleData.sale_date);
-                $('#edit_total_amount').val(saleData.total_amount);
+                $('#edit_quantity').val(saleData.quantity);
+                $('#edit_unit_price').val(saleData.unit_price);
                 
                 $('#edit_saleModal').modal('show');
             });
@@ -495,9 +544,10 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                 const formData = {
                   edit_id: $('#edit_id').val(),
                   edit_customer_name: $('#edit_customer_name').val(),
-                  edit_user_id: $('#edit_user_id').val(),
+                  edit_product_id: $('#edit_product_id').val(),
                   edit_sale_date: $('#edit_sale_date').val(),
-                  edit_total_amount: $('#edit_total_amount').val()
+                  edit_quantity: $('#edit_quantity').val(),
+                  edit_unit_price: $('#edit_unit_price').val()
                 };
                 $.ajax({
                     url: 'saleOperation.php?action=update_sale',
@@ -577,16 +627,19 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                             <tr>
                                 <td>${row.sale_id || ''}</td>
                                 <td>${row.customer_name || ''}</td>
-                                <td>${row.username || ''}</td>
+                                <td>${row.product_name || ''}</td>
                                 <td>${row.sale_date || ''}</td>
-                                <td>${row.total_amount || ''}</td>
+                                <td>${row.quantity || ''}</td>
+                                <td>${row.unit_price || ''}</td>
+                                <td>${row.username || ''}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm editBtn" 
                                         data-id="${row.sale_id  }" 
                                         data-customer_name="${row.customer_name}"
-                                        data-user_id="${row.user_id}"
+                                        data-product_id="${row.product_id}"
                                         data-sale_date="${row.sale_date}"
-                                        data-total_amount="${row.total_amount}">
+                                        data-quantity="${row.quantity}"
+                                        data-unit_price="${row.unit_price}">
                                         Edit
                                     </button>
                                     <button class="btn btn-danger btn-sm deleteBtn" 
