@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 16, 2025 at 04:42 PM
+-- Generation Time: May 17, 2025 at 09:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,16 +30,20 @@ SET time_zone = "+00:00";
 CREATE TABLE `categories` (
   `category_id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
-  `description` text DEFAULT NULL
+  `description` text DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`category_id`, `name`, `description`) VALUES
-(1, 'Electronics', 'Electronic items'),
-(3, 'Stationery', 'Office supplies');
+INSERT INTO `categories` (`category_id`, `name`, `description`, `user_id`) VALUES
+(1, 'Electronics', 'Electronic items', 1),
+(3, 'Stationery', 'Office supplies', 1),
+(6, 'mobiles', 'iphone 19 pro', 1),
+(7, 'computers', 'laptop apple', 2),
+(8, 'learns', 'pens', 2);
 
 -- --------------------------------------------------------
 
@@ -54,37 +58,20 @@ CREATE TABLE `products` (
   `category_id` int(11) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   `quantity_in_stock` int(11) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`product_id`, `name`, `description`, `category_id`, `price`, `quantity_in_stock`, `created_at`) VALUES
-(1, 'Laptop', 'Dell Core i5', 1, 500.00, 10, '2025-05-14 10:34:31'),
-(2, 'Notebook', '210 pages notebook', 3, 9.00, 20, '2025-05-14 10:38:33');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `purchasedetails`
---
-
-CREATE TABLE `purchasedetails` (
-  `detail_id` int(11) NOT NULL,
-  `purchase_id` int(11) DEFAULT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  `unit_price` decimal(10,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `purchasedetails`
---
-
-INSERT INTO `purchasedetails` (`detail_id`, `purchase_id`, `product_id`, `quantity`, `unit_price`) VALUES
-(11, 8, 2, 20, 9.00);
+INSERT INTO `products` (`product_id`, `name`, `description`, `category_id`, `price`, `quantity_in_stock`, `created_at`, `user_id`) VALUES
+(1, 'Laptop', 'Dell Core i5', 1, 500.00, 10, '2025-05-14 10:34:31', 1),
+(2, 'Notebook', '210 pages notebook', 3, 9.00, 20, '2025-05-14 10:38:33', 1),
+(7, 'printer', 'print items boards', 1, 600.00, 10, '2025-05-17 14:19:33', 1),
+(10, 'laptop', 'good laptop', 7, 200.00, 105, '2025-05-17 18:31:01', 2),
+(11, 'pens', 'pens', 8, 5.00, 5, '2025-05-17 19:14:51', 2);
 
 -- --------------------------------------------------------
 
@@ -95,38 +82,20 @@ INSERT INTO `purchasedetails` (`detail_id`, `purchase_id`, `product_id`, `quanti
 CREATE TABLE `purchases` (
   `purchase_id` int(11) NOT NULL,
   `supplier_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
   `purchase_date` date DEFAULT NULL,
-  `total_amount` decimal(10,2) DEFAULT NULL
+  `quantity` int(11) DEFAULT NULL,
+  `unit_price` decimal(10,2) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `purchases`
 --
 
-INSERT INTO `purchases` (`purchase_id`, `supplier_id`, `user_id`, `purchase_date`, `total_amount`) VALUES
-(8, 2, 2, '2025-05-15', 20.00);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `saledetails`
---
-
-CREATE TABLE `saledetails` (
-  `detail_id` int(11) NOT NULL,
-  `sale_id` int(11) DEFAULT NULL,
-  `product_id` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  `unit_price` decimal(10,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `saledetails`
---
-
-INSERT INTO `saledetails` (`detail_id`, `sale_id`, `product_id`, `quantity`, `unit_price`) VALUES
-(3, 3, 1, 30, 160.00);
+INSERT INTO `purchases` (`purchase_id`, `supplier_id`, `product_id`, `purchase_date`, `quantity`, `unit_price`, `user_id`) VALUES
+(15, 2, 11, '2025-05-17', 5, 5.00, 2),
+(16, 2, 10, '2025-05-17', 5, 500.00, 2);
 
 -- --------------------------------------------------------
 
@@ -136,18 +105,20 @@ INSERT INTO `saledetails` (`detail_id`, `sale_id`, `product_id`, `quantity`, `un
 
 CREATE TABLE `sales` (
   `sale_id` int(11) NOT NULL,
-  `customer_name` varchar(100) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
   `sale_date` date DEFAULT NULL,
-  `total_amount` decimal(10,2) DEFAULT NULL
+  `quantity` int(11) DEFAULT NULL,
+  `unit_price` decimal(10,2) DEFAULT NULL,
+  `customer_name` varchar(100) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `sales`
 --
 
-INSERT INTO `sales` (`sale_id`, `customer_name`, `user_id`, `sale_date`, `total_amount`) VALUES
-(3, 'ahmed ali', 1, '2025-05-16', 150.00);
+INSERT INTO `sales` (`sale_id`, `product_id`, `sale_date`, `quantity`, `unit_price`, `customer_name`, `user_id`) VALUES
+(2, 1, '2025-05-17', 3, 1500.00, 'ahmed ali', 1);
 
 -- --------------------------------------------------------
 
@@ -204,7 +175,8 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `created_at`) VA
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`category_id`),
-  ADD UNIQUE KEY `name` (`name`);
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `fk_user` (`user_id`);
 
 --
 -- Indexes for table `products`
@@ -214,34 +186,20 @@ ALTER TABLE `products`
   ADD KEY `category_id` (`category_id`);
 
 --
--- Indexes for table `purchasedetails`
---
-ALTER TABLE `purchasedetails`
-  ADD PRIMARY KEY (`detail_id`),
-  ADD KEY `purchase_id` (`purchase_id`),
-  ADD KEY `product_id` (`product_id`);
-
---
 -- Indexes for table `purchases`
 --
 ALTER TABLE `purchases`
   ADD PRIMARY KEY (`purchase_id`),
   ADD KEY `supplier_id` (`supplier_id`),
+  ADD KEY `product_id` (`product_id`),
   ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `saledetails`
---
-ALTER TABLE `saledetails`
-  ADD PRIMARY KEY (`detail_id`),
-  ADD KEY `sale_id` (`sale_id`),
-  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `sales`
 --
 ALTER TABLE `sales`
   ADD PRIMARY KEY (`sale_id`),
+  ADD KEY `product_id` (`product_id`),
   ADD KEY `user_id` (`user_id`);
 
 --
@@ -266,31 +224,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `purchasedetails`
---
-ALTER TABLE `purchasedetails`
-  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `purchases`
 --
 ALTER TABLE `purchases`
-  MODIFY `purchase_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `saledetails`
---
-ALTER TABLE `saledetails`
-  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `purchase_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `sales`
@@ -315,37 +261,31 @@ ALTER TABLE `users`
 --
 
 --
+-- Constraints for table `categories`
+--
+ALTER TABLE `categories`
+  ADD CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL;
+
+--
 -- Constraints for table `products`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`);
 
 --
--- Constraints for table `purchasedetails`
---
-ALTER TABLE `purchasedetails`
-  ADD CONSTRAINT `purchasedetails_ibfk_1` FOREIGN KEY (`purchase_id`) REFERENCES `purchases` (`purchase_id`),
-  ADD CONSTRAINT `purchasedetails_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
-
---
 -- Constraints for table `purchases`
 --
 ALTER TABLE `purchases`
   ADD CONSTRAINT `purchases_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`supplier_id`),
-  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
-
---
--- Constraints for table `saledetails`
---
-ALTER TABLE `saledetails`
-  ADD CONSTRAINT `saledetails_ibfk_1` FOREIGN KEY (`sale_id`) REFERENCES `sales` (`sale_id`),
-  ADD CONSTRAINT `saledetails_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`);
+  ADD CONSTRAINT `purchases_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`),
+  ADD CONSTRAINT `purchases_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `sales`
 --
 ALTER TABLE `sales`
-  ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+  ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`),
+  ADD CONSTRAINT `sales_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

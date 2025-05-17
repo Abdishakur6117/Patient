@@ -1,4 +1,5 @@
 <?php
+session_start();
 header('Content-Type: application/json');
 require_once '../Connection/connection.php';
 
@@ -9,8 +10,8 @@ try {
     $conn = $db->getConnection();
     
     switch ($action) {           
-        case 'get_user':
-            get_user($conn);
+        case 'get_product':
+            get_product($conn);
             break;
         case 'display_sale':
             display_sale($conn);
@@ -43,108 +44,215 @@ try {
     ]);
 }
 
-function get_user($conn) {
-    $stmt = $conn->query("SELECT user_id, username FROM users ORDER BY username");
+function get_product($conn) {
+    if (empty($_SESSION['user_id'])) {
+        throw new Exception('User is not logged in');
+    }
+
+    $user_id = $_SESSION['user_id'];
+
+    $stmt = $conn->prepare("
+        SELECT product_id, name, price 
+        FROM products 
+        WHERE user_id = ?
+        ORDER BY name
+    ");
+    $stmt->execute([$user_id]);
+
     echo json_encode([
         'status' => 'success',
         'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)
     ]);
 }
+
 function display_sale($conn) {
+
+    if (empty($_SESSION['user_id'])) {
+        throw new Exception('User is not logged in');
+    }
+
+    $user_id = $_SESSION['user_id'];
+
     $query = "
         SELECT 
-        s.sale_id,
-        s.customer_name,
-        u.user_id as user_id,
-        u.username,
-        s.sale_date,
-        s.total_amount
+            s.sale_id,
+            s.customer_name,
+            p.product_id AS product_id,
+            p.name AS product_name,
+            s.sale_date,
+            s.quantity,
+            s.unit_price
         FROM Sales s
-        JOIN users u ON s.user_id = u.user_id
-        
+        JOIN products p ON s.product_id = p.product_id
+        WHERE s.user_id = ?
+        ORDER BY s.sale_date DESC
     ";
-    
-    $stmt = $conn->query($query);
+
+    $stmt = $conn->prepare($query);
+    $stmt->execute([$user_id]);
+
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
-
-
+  
 function create_sale($conn) {
-    // 1. Required fields (except total_amount)
-    $required = ['customer_name','user_id','sale_date', 'total_amount'];
+
+    // Hubi user login
+    if (!isset($_SESSION['user_id'])) {
+        throw new Exception("User not logged in");
+    }
+
+    $user_id = $_SESSION['user_id'];
+
+    // 1. Required fields
+    $required = ['customer_name', 'product_id', 'sale_date', 'quantity', 'unit_price'];
     $data = [];
-    
+
     foreach ($required as $field) {
         if (empty($_POST[$field])) {
             throw new Exception(ucfirst(str_replace('_', ' ', $field)) . ' is required');
         }
         $data[$field] = $_POST[$field];
     }
-    
-    $stmt = $conn->prepare("
-        INSERT INTO sales (customer_name,user_id, sale_date, total_amount)
-        VALUES (?, ?, ?, ?)
-    ");
-    
-    $success = $stmt->execute([
-        $data['customer_name'],
-        $data['user_id'],
-        $data['sale_date'],
-        $data['total_amount']
-    ]);
-    
-    if ($success) {
+
+    $product_id = $data['product_id'];
+    $quantity_requested = (int)$data['quantity'];
+
+    // 2. Hubi in stock uu ku filan yahay
+    $stmt = $conn->prepare("SELECT quantity_in_stock, name FROM products WHERE product_id = ?");
+    $stmt->execute([$product_id]);
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$product) {
+        throw new Exception("Product not found");
+    }
+
+    $stock_available = (int)$product['quantity_in_stock'];
+
+    if ($quantity_requested > $stock_available) {
+        throw new Exception("Insufficient stock for product: " . $product['name'] . ". Only $stock_available in stock.");
+    }
+
+    // 3. Haddii stock ku filan yahay, samee sale
+    $conn->beginTransaction();
+
+    try {
+        // Insert into sales
+        $stmt = $conn->prepare("
+            INSERT INTO sales (customer_name, product_id, sale_date, quantity, unit_price, user_id)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $data['customer_name'],
+            $data['product_id'],
+            $data['sale_date'],
+            $data['quantity'],
+            $data['unit_price'],
+            $user_id
+        ]);
+
+        // 4. Update product stock
+        $stmt = $conn->prepare("
+            UPDATE products SET quantity_in_stock = quantity_in_stock - ? WHERE product_id = ?
+        ");
+        $stmt->execute([$quantity_requested, $product_id]);
+
+        $conn->commit();
+
         echo json_encode([
             'status' => 'success',
             'message' => 'Sale created successfully',
-            'sale_id' => $conn->lastInsertId() // useful for creating saleDetails after this
+            'sale_id' => $conn->lastInsertId()
         ]);
-    } else {
-        throw new Exception('Failed to create sale');
+    } catch (Exception $e) {
+        $conn->rollBack();
+        throw new Exception("Transaction failed: " . $e->getMessage());
     }
-}    
-
+}
 function update_sale($conn) {
-    // Accept both 'edit_id' and 'id' as the identifier
     $purchase_id = $_POST['edit_id'] ?? $_POST['id'] ?? null;
 
-    // Define required fields
     $required = [
         'id' => $purchase_id,
         'customer_name' => $_POST['edit_customer_name'] ?? null,
-        'user_id' => $_POST['edit_user_id'] ?? null,
+        'product_id' => $_POST['edit_product_id'] ?? null,
         'sale_date' => $_POST['edit_sale_date'] ?? null,
-        'total_amount' => $_POST['edit_total_amount'] ?? null
+        'quantity' => (int)($_POST['edit_quantity'] ?? 0),
+        'unit_price' => $_POST['edit_unit_price'] ?? null
     ];
 
-        // Update purchase main table
-        $stmt = $conn->prepare("
-            UPDATE Sales SET
-                customer_name = ?,
-                user_id = ?,
-                sale_date = ?,
-                total_amount = ?
-            WHERE sale_id = ?
-        ");
-        $success= $stmt->execute([
-            $required['customer_name'],
-            $required['user_id'],
-            $required['sale_date'],
-            $required['total_amount'],
-            $required['id']
+    // 1. Get old quantity from Sales
+    $stmt = $conn->prepare("SELECT quantity FROM Sales WHERE sale_id = ?");
+    $stmt->execute([$required['id']]);
+    $old_sale = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$old_sale) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Sale record not found'
         ]);
+        return;
+    }
 
-        if ($success) {
-            echo json_encode([
-                'status' => 'success',
-                'message' => 'Sales  updated successfully'
-            ]);
-        } else {
-            throw new Exception('Failed to update Sales ');
-        }
+    $old_quantity = (int)$old_sale['quantity'];
+    $new_quantity = $required['quantity'];
+    $quantity_diff = $old_quantity - $new_quantity; // could be positive or negative
+
+    // 2. Get current stock from Products
+    $stmt = $conn->prepare("SELECT quantity_in_stock FROM Products WHERE product_id = ?");
+    $stmt->execute([$required['product_id']]);
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$product) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Product not found'
+        ]);
+        return;
+    }
+
+    $current_stock = (int)$product['quantity_in_stock'];
+    $adjusted_stock = $current_stock + $quantity_diff;
+
+    if ($adjusted_stock < 0) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Insufficient stock to update. Only ' . $current_stock . ' available.'
+        ]);
+        return;
+    }
+
+    // 3. Update the Sale
+    $stmt = $conn->prepare("
+        UPDATE Sales SET
+            customer_name = ?,
+            product_id = ?,
+            sale_date = ?,
+            quantity = ?,
+            unit_price = ?
+        WHERE sale_id = ?
+    ");
+    $success = $stmt->execute([
+        $required['customer_name'],
+        $required['product_id'],
+        $required['sale_date'],
+        $new_quantity,
+        $required['unit_price'],
+        $required['id']
+    ]);
+
+    if ($success) {
+        // 4. Update the stock
+        $stmt = $conn->prepare("UPDATE Products SET quantity_in_stock = ? WHERE product_id = ?");
+        $stmt->execute([$adjusted_stock, $required['product_id']]);
+
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Sale updated and stock adjusted successfully'
+        ]);
+    } else {
+        throw new Exception('Failed to update Sale');
+    }
 }
-
-
 function delete_sale($conn) {
     if (empty($_POST['id'])) {
         throw new Exception('Sale ID is required');
@@ -155,38 +263,38 @@ function delete_sale($conn) {
     try {
         $conn->beginTransaction();
 
-        // 1. Hel saleDetails
-        $stmt = $conn->prepare("SELECT product_id, quantity FROM saleDetails WHERE sale_id = ?");
+        // Hel product_id iyo quantity sale-ga laga tirayo
+        $stmt = $conn->prepare("SELECT product_id, quantity FROM Sales WHERE sale_id = ?");
         $stmt->execute([$sale_id]);
-        $details = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sale = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // 2. Dib ugu dar stock
-        $stmtUpdate = $conn->prepare("UPDATE products SET quantity_in_stock = quantity_in_stock + ? WHERE product_id = ?");
-        foreach ($details as $row) {
-            $stmtUpdate->execute([$row['quantity'], $row['product_id']]);
+        if (!$sale) {
+            throw new Exception('Sale not found');
         }
 
-        // 3. Delete saleDetails
-        $stmt = $conn->prepare("DELETE FROM saleDetails WHERE sale_id = ?");
-        $stmt->execute([$sale_id]);
+        $product_id = $sale['product_id'];
+        $quantity = $sale['quantity'];
 
-        // 4. Delete sale
-        $stmt = $conn->prepare("DELETE FROM sales WHERE sale_id = ?");
+        // Dib ugu dar stock
+        $stmt = $conn->prepare("UPDATE Products SET quantity_in_stock = quantity_in_stock + ? WHERE product_id = ?");
+        $stmt->execute([$quantity, $product_id]);
+
+        // Tirtir sale-ga
+        $stmt = $conn->prepare("DELETE FROM Sales WHERE sale_id = ?");
         $stmt->execute([$sale_id]);
 
         $conn->commit();
 
         echo json_encode([
             'status' => 'success',
-            'message' => 'Sale and its details deleted. Stock restored.'
+            'message' => 'Sale deleted and stock updated successfully.'
         ]);
-        } catch (Exception $e) {
-            $conn->rollBack();
-            echo json_encode([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ]);
+    } catch (Exception $e) {
+        $conn->rollBack();
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Failed to delete sale: ' . $e->getMessage()
+        ]);
     }
 }
-
 ?>

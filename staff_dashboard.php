@@ -1,20 +1,43 @@
 <?php
 session_start();
 require_once 'Connection/db_connect.php';
-// Check if the user is logged in and has the 'staff' role
+
+// Hubi haddii isticmaaluhu uu galo oo uu leeyahay doorarka 'staff'
 if (!isset($_SESSION['user']) || $_SESSION['role'] != 'staff') {
-    // Redirect to login page if not logged in or not an staff
+    // Haddii uusan galo ama uusan ahayn 'staff', ku celiso bogga login
     header("Location: login.php");
     exit();
 }
 
-// Tirada wax kasta
-$totalProducts = $conn->query("SELECT COUNT(*) FROM products")->fetch_row()[0];
-$totalPurchases = $conn->query("SELECT COUNT(*) FROM purchases")->fetch_row()[0];
-$totalPurchaseDetails = $conn->query("SELECT COUNT(*) FROM purchaseDetails")->fetch_row()[0];
-$totalSales = $conn->query("SELECT COUNT(*) FROM sales")->fetch_row()[0];
-$totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row()[0];
+$userId = $_SESSION['user_id'];  // Isticmaal ID-ga isticmaalaha ee session-ka
+
+// Soo hel tirada categories, products, purchases, iyo sales ee isticmaalaha
+$totalCategories = $conn->query("SELECT COUNT(*) FROM categories WHERE user_id = $userId")->fetch_row()[0];
+$totalProducts = $conn->query("SELECT COUNT(*) FROM products WHERE user_id = $userId")->fetch_row()[0];
+$totalPurchases = $conn->query("SELECT COUNT(*) FROM purchases WHERE user_id = $userId")->fetch_row()[0];
+$totalSales = $conn->query("SELECT COUNT(*) FROM sales WHERE user_id = $userId")->fetch_row()[0];
+
+// Hubi in isticmaalaha uu leeyahay doorarka 'staff' (table name: users, column name: role)
+$query = "SELECT role FROM users WHERE user_id = $userId";
+$result = $conn->query($query);
+
+if ($result) {
+    $userRole = $result->fetch_row()[0];
+    if ($userRole != 'staff') {
+        // Haddii doorarka aysan ahayn 'staff', ku celiso bogga login
+        header("Location: login.php");
+        exit();
+    }
+} else {
+    echo "Error in fetching role: " . $conn->error;
+    exit();
+}
+
 ?>
+
+
+
+
 
 <!doctype html>
 <html lang="en">
@@ -115,6 +138,20 @@ $totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row(
                                     <i class="fas fa-tachometer-alt"></i> Dashboard
                                 </a>
                             </li>
+                            <!-- categories -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-category"
+                                    aria-expanded="false" aria-controls="submenu-category">
+                                    <i class="fas fa-boxes"></i> Category
+                                </a>
+                                <div id="submenu-category" class="collapse submenu">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="staff/Category.php">List Category</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
                             <!-- Products -->
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-products"
@@ -144,20 +181,6 @@ $totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row(
                                 </div>
                             </li>
 
-                            <!-- Purchase Details -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-purchase-details"
-                                    aria-expanded="false" aria-controls="submenu-purchase-details">
-                                    <i class="fas fa-file-invoice"></i> Purchase Details
-                                </a>
-                                <div id="submenu-purchase-details" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="staff/PurchaseDetails.php">List Purchase Details</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
 
                             <!-- Sales -->
                             <li class="nav-item">
@@ -174,16 +197,16 @@ $totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row(
                                 </div>
                             </li>
 
-                            <!-- Sale Details -->
+                            <!-- report -->
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-sale-details"
                                     aria-expanded="false" aria-controls="submenu-sale-details">
-                                    <i class="fas fa-receipt"></i> Sale Details
+                                    <i class="fas fa-receipt"></i> Report
                                 </a>
                                 <div id="submenu-sale-details" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="staff/SaleDetails.php">List Sale Details</a>
+                                            <a class="nav-link" href="staff/customerReport.php">Customer Report</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -218,6 +241,19 @@ $totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row(
 
                     <div class="container mt-5">
                         <div class="row">
+
+                            <!-- Categories -->
+                            <div class="col-md-3 mb-4">
+                                <div class="card text-white bg-success">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Categories</h5>
+                                            <h3><?php echo $totalCategories; ?></h3>
+                                        </div>
+                                        <i class="fa fa-tags fa-2x"></i>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Products -->
                             <div class="col-md-3 mb-4">
                                 <div class="card text-white bg-info">
@@ -244,18 +280,6 @@ $totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row(
                                 </div>
                             </div>
 
-                            <!-- Purchase Details -->
-                            <div class="col-md-3 mb-4">
-                                <div class="card text-white bg-secondary">
-                                    <div class="card-body d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h5 class="card-title">Purchase Details</h5>
-                                            <h3><?php echo $totalPurchaseDetails; ?></h3>
-                                        </div>
-                                        <i class="fa fa-file-invoice fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Sales -->
                             <div class="col-md-3 mb-4">
@@ -270,19 +294,6 @@ $totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row(
                                 </div>
                             </div>
 
-                            <!-- Sale Details -->
-                            <div class="col-md-3 mb-4">
-                                <div class="card text-white bg-dark">
-                                    <div class="card-body d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h5 class="card-title">Sale Details</h5>
-                                            <h3><?php echo $totalSaleDetails; ?></h3>
-                                        </div>
-                                        <i class="fa fa-receipt fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
 
@@ -291,22 +302,6 @@ $totalSaleDetails = $conn->query("SELECT COUNT(*) FROM saleDetails")->fetch_row(
             <!-- ============================================================== -->
             <!-- footer -->
             <!-- ============================================================== -->
-            <div class="footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                             Copyright © 2018 Concept. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
-                        </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                            <div class="text-md-right footer-links d-none d-sm-block">
-                                <a href="javascript: void(0);">About</a>
-                                <a href="javascript: void(0);">Support</a>
-                                <a href="javascript: void(0);">Contact Us</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <!-- ============================================================== -->
             <!-- end footer -->
             <!-- ============================================================== -->

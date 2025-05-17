@@ -45,33 +45,58 @@ try {
 }
 
 function get_product($conn) {
-    $stmt = $conn->query("SELECT product_id, name, price FROM products ORDER BY name");
+    if (empty($_SESSION['user_id'])) {
+        throw new Exception('User is not logged in');
+    }
+
+    $user_id = $_SESSION['user_id'];
+
+    $stmt = $conn->prepare("
+        SELECT product_id, name, price 
+        FROM products 
+        WHERE user_id = ?
+        ORDER BY name
+    ");
+    $stmt->execute([$user_id]);
+
     echo json_encode([
         'status' => 'success',
         'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)
     ]);
 }
+
 function display_sale($conn) {
+
+    if (empty($_SESSION['user_id'])) {
+        throw new Exception('User is not logged in');
+    }
+
+    $user_id = $_SESSION['user_id'];
+
     $query = "
         SELECT 
-        s.sale_id,
-        s.customer_name,
-        p.product_id as product_id,
-        p.name as product_name,
-        s.sale_date,
-        s.quantity,
-        s.unit_price,
-        u.user_id as user_id,
-        u.username
+            s.sale_id,
+            s.customer_name,
+            p.product_id AS product_id,
+            p.name AS product_name,
+            s.sale_date,
+            s.quantity,
+            s.unit_price,
+            u.user_id AS user_id,
+            u.username
         FROM Sales s
         JOIN users u ON s.user_id = u.user_id
         JOIN products p ON s.product_id = p.product_id
-        
+        WHERE s.user_id = ?
+        ORDER BY s.sale_date DESC
     ";
-    
-    $stmt = $conn->query($query);
+
+    $stmt = $conn->prepare($query);
+    $stmt->execute([$user_id]);
+
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-}   
+}
+  
 function create_sale($conn) {
 
     // Hubi user login

@@ -53,27 +53,39 @@ function get_supplier($conn) {
 }
 
 function display_purchase($conn) {
+
+    if (empty($_SESSION['user_id'])) {
+        throw new Exception('User is not logged in');
+    }
+
+    $user_id = $_SESSION['user_id'];
+
     $query = "
         SELECT 
             p.purchase_id,
-            s.supplier_id as supplier_id,
-            s.name as supplier_name,
-            pr.product_id as product_id,
-            pr.name as product_name,
+            s.supplier_id,
+            s.name AS supplier_name,
+            pr.product_id,
+            pr.name AS product_name,
             p.purchase_date,
             p.quantity,
             p.unit_price,
-            u.user_id as user_id,
-            u.username as user_name
+            u.user_id,
+            u.username AS user_name
         FROM purchases p
         JOIN suppliers s ON p.supplier_id = s.supplier_id
         JOIN products pr ON p.product_id = pr.product_id
         JOIN users u ON p.user_id = u.user_id
+        WHERE p.user_id = ?
+        ORDER BY p.purchase_date DESC
     ";
-    
-    $stmt = $conn->query($query);
+
+    $stmt = $conn->prepare($query);
+    $stmt->execute([$user_id]);
+
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
+
 function create_purchase($conn) {
     // 1. Required fields
     $required = ['supplier_id', 'product_name', 'purchase_date', 'quantity', 'unit_price'];

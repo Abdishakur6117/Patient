@@ -106,6 +106,21 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'staff') {
                                     <i class="fas fa-tachometer-alt"></i> Dashboard
                                 </a>
                             </li>
+                            <!-- categories -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-category"
+                                    aria-expanded="false" aria-controls="submenu-category">
+                                    <i class="fas fa-boxes"></i> Category
+                                </a>
+                                <div id="submenu-category" class="collapse submenu">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="../staff/Category.php">List Category</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
                             <!-- Products -->
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-products"
@@ -135,20 +150,6 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'staff') {
                                 </div>
                             </li>
 
-                            <!-- Purchase Details -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-purchase-details"
-                                    aria-expanded="false" aria-controls="submenu-purchase-details">
-                                    <i class="fas fa-file-invoice"></i> Purchase Details
-                                </a>
-                                <div id="submenu-purchase-details" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../staff/PurchaseDetails.php">List Purchase Details</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
 
                             <!-- Sales -->
                             <li class="nav-item">
@@ -165,20 +166,21 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'staff') {
                                 </div>
                             </li>
 
-                            <!-- Sale Details -->
+                            <!-- Reports -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-sale-details"
-                                    aria-expanded="false" aria-controls="submenu-sale-details">
-                                    <i class="fas fa-receipt"></i> Sale Details
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-reports"
+                                    aria-expanded="false" aria-controls="submenu-reports">
+                                    <i class="fas fa-chart-bar"></i> Reports
                                 </a>
-                                <div id="submenu-sale-details" class="collapse submenu">
+                                <div id="submenu-reports" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../staff/SaleDetails.php">List Sale Details</a>
+                                            <a class="nav-link" href="../staff/customerReport.php">Customer Report</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
+
                         </ul>
                     </div>
                 </nav>
