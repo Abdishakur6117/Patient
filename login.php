@@ -4,14 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <!-- Bootstrap CSS (Online) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- SweetAlert JS (Online) -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
 
-    <!-- jQuery (Online) -->
+    <!-- jQuery 3.5.1 -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <style>
+    body {
+      background-image: url('https://www.webmediatricks.com/uploaded_files/product/1703848338.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+  </style>
+
 </head>
 <body>
 
@@ -20,8 +35,8 @@
         <h3 class="text-center">Login</h3>
         <form id="loginForm">
             <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" >
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" >
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
@@ -46,8 +61,6 @@ $(document).ready(function () {
       data: formData,
       dataType: "json",
       success: function (res) {
-        console.log(res);  // Log the response
-
         if (res.status === "success") {
           swal({
             title: "Login Successful!",
@@ -55,14 +68,14 @@ $(document).ready(function () {
             icon: "success",
             button: "OK",
           }).then(function () {
-            // Redirect based on the role
-            let role = res.role.toLowerCase();
+            let role = res.role;
             if (role === "admin") {
               window.location.href = "index.php";
-            } else if (role === "staff") {
-              window.location.href = "staff_dashboard.php";
+            } else if (role === "employee") {
+              window.location.href = "employee_dashboard.php";
+            } else if (role === "job_seeker") {
+              window.location.href = "jobSeeker_dashboard.php";
             }
-
           });
         } else {
           swal({
@@ -73,7 +86,7 @@ $(document).ready(function () {
           });
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function () {
         swal({
           title: "Error!",
           text: "An error occurred while submitting the form.",

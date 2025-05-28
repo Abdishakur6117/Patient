@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-// Check if the user is logged in and has the 'Admin' role
-if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
-    // Redirect to login page if not logged in or not an Admin
+// Check if the user is logged in and has the 'employee' role
+if (!isset($_SESSION['user']) || $_SESSION['role'] != 'employee') {
+    // Redirect to login page if not logged in or not an employee
     header("Location: login.php");
     exit();
 }
@@ -60,7 +60,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         <!-- ============================================================== -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="../index.php">Job Portal Management System</a>
+                <a class="navbar-brand" href="../employee_dashboard.php">Job Portal Management System</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -104,24 +104,9 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
 
                             <!-- Dashboard -->
                             <li class="nav-item">
-                                <a class="nav-link margin-top-10" href="../index.php">
+                                <a class="nav-link margin-top-10" href="../employee_dashboard.php">
                                     <i class="fas fa-home"></i> Dashboard
                                 </a>
-                            </li>
-
-                            <!-- Users -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-users"
-                                    aria-expanded="false" aria-controls="submenu-users">
-                                    <i class="fas fa-user-friends"></i> Users
-                                </a>
-                                <div id="submenu-users" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/users.php">List Users</a>
-                                        </li>
-                                    </ul>
-                                </div>
                             </li>
 
                             <!-- Companies -->
@@ -133,7 +118,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                 <div id="submenu-companies" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/company.php">List Companies</a>
+                                            <a class="nav-link" href="../employee/company.php">List Companies</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -148,22 +133,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                 <div id="submenu-jobs" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/job.php">List Jobs</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
-                            <!-- User Profiles -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-profiles"
-                                    aria-expanded="false" aria-controls="submenu-profiles">
-                                    <i class="fas fa-id-badge"></i> User Profiles
-                                </a>
-                                <div id="submenu-profiles" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/userProfile.php">List Profiles</a>
+                                            <a class="nav-link" href="../employee/job.php">List Jobs</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -178,7 +148,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                 <div id="submenu-applications" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/application.php">List Applications</a>
+                                            <a class="nav-link" href="../employee/application.php">List Applications</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -193,10 +163,10 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                 <div id="submenu-reports" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/companyReport.php">Company Report</a>
+                                            <a class="nav-link" href="../employee/companyReport.php">Company Report</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/jobSeekerReport.php">Job Seeker Report</a>
+                                            <a class="nav-link" href="../employee/jobSeekerReport.php">Job Seeker Report</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -216,18 +186,17 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         <div class="dashboard-wrapper">
             <div class="dashboard-ecommerce">
                 <div class="container-fluid dashboard-content ">
-                    <h2>User Form</h2>
-                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add User</button>
+                    <h2>Company Form</h2>
                     <br>
                     <br>
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <td>ID</td>
-                                <td>name</td>
-                                <td>Email</td>
-                                <td>Role</td>
-                                <td>Created at</td>
+                                <td>Employee Name</td>
+                                <td>Company Name</td>
+                                <td>Description</td>
+                                <td>Location</td>
                                 <td>Actions</td>
                             </tr>
                         </thead>
@@ -236,51 +205,42 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     </table>
                 </div>
                 <!--/   INsert Modal start -->
-                <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="companyModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add New User</h5>
+                                <h5 class="modal-title">Add New Company</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="userForm" method="POST" action="">
+                                <form id="companyForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="text" class="form-control" id="name" name="name">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="email">Email </label>
-                                                <input type="email" class="form-control" id="email" name="email">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">Password </label>
-                                                <input type="password" class="form-control" id="password" name="password">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">ConfirmPassword </label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="role" id="role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="admin">admin</option>
-                                                    <option value="employee">employee</option>
-                                                    <option value="job_seeker">job_seeker</option>
+                                                <label for="employee">Employee Name </label>
+                                                <select class="form-control" name="employee_name" id="employee_name">
+                                                    <option value="">Select employee</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="company">Company Name </label>
+                                                <input type="text" class="form-control" id="company_name" name="company_name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="description">Description </label>
+                                                <input type="text" class="form-control" id="description" name="description">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="location">Location </label>
+                                                <input type="text" class="form-control" id="location" name="location">
                                             </div>
                                         </div>
                                     </div>
@@ -295,40 +255,43 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                 </div>
                 <!--/   INsert Modal end -->
                 <!-- start Update Model  -->
-                <div class="modal fade" id="edit_userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="edit_companyModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Update Users</h5>
+                                <h5 class="modal-title">Update Company</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="edit_userForm" method="POST" action="">
+                                <form id="edit_companyForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
+                                                <label for="employee">Employee Name </label>
                                                 <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                                <input type="text" class="form-control" id="edit_name" name="edit_name">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="email">Email </label>
-                                                <input type="email" class="form-control" id="edit_email" name="edit_email">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="edit_role" id="edit_role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="admin">admin</option>
-                                                    <option value="employee">employee</option>
-                                                    <option value="job_seeker">job_seeker</option>
+                                                <select class="form-control" name="edit_employee_name" id="edit_employee_name">
+                                                    <option value="">Select employee</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="company">Company Name </label>
+                                                <input type="text" class="form-control" id="edit_company_name" name="edit_company_name">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="description">Description </label>
+                                                <input type="text" class="form-control" id="edit_description" name="edit_description">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="location">Location </label>
+                                                <input type="text" class="form-control" id="edit_location" name="edit_location">
                                             </div>
                                         </div>
                                     </div>
@@ -376,26 +339,53 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         $(document).ready(function() {
             // Initialize modals and load data
             $('#insertModal').click(function() {
-                $('#userModal').modal('show');
-                $('#userForm')[0].reset();
+                $('#companyModal').modal('show');
+                $('#companyForm')[0].reset();
             });
             
             // Initial data loading
             displayData();
-            
+            loadEmployee();
+
+            // Load aircraft for dropdown
+            function loadEmployee() {
+                $.ajax({
+                    url: 'companyOperation.php?action=get_employee',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if(response.status === 'success' && response.data) {
+                            const $select = $('#employee_name, #edit_employee_name');
+                            $select.empty().append('<option value="">Select Employee</option>');
+                            
+                            response.data.forEach(employee => {
+                                $select.append($('<option>', {
+                                    value: employee.user_id,
+                                    text: employee.employee_name
+                                }));
+                            });
+                        } else {
+                            showError('Failed to load employee');
+                        }
+                    },
+                    error: function() {
+                        showError('Network error loading employee');
+                    }
+                });
+            }
             // Create user record
-            $('#userForm').submit(function(e) {
+            $('#companyForm').submit(function(e) {
                 e.preventDefault();
                 
                 $.ajax({
                     type: 'POST',
-                    url: 'userOperation.php?action=create_user',
+                    url: 'companyOperation.php?action=create_company',
                     data: $(this).serialize(),
                     dataType: "json",
                     success: function(res) {
                         if (res.status === 'success') {
                             showSuccess(res.message, function() {
-                                $('#userModal').modal('hide');
+                                $('#companyModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -412,39 +402,42 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
             $(document).on('click', '.editBtn', function() {
                 const userData = {
                     id: $(this).data('id'),
-                    name: $(this).data('name'),
-                    email: $(this).data('email'),
-                    role: $(this).data('role')
+                    employee_name: $(this).data('employee_name'),
+                    company_name: $(this).data('company_name'),
+                    description: $(this).data('description'),
+                    location: $(this).data('locations')
                 };
                 
                 $('#edit_id').val(userData.id);
-                $('#edit_name').val(userData.name);
-                $('#edit_email').val(userData.email);
-                $('#edit_role').val(userData.role);
+                $('#edit_employee_name').val(userData.employee_name);
+                $('#edit_company_name').val(userData.company_name);
+                $('#edit_description').val(userData.description);
+                $('#edit_location').val(userData.location);
                 
-                $('#edit_userModal').modal('show');
+                $('#edit_companyModal').modal('show');
             });
             
             // Update user record
-            $('#edit_userForm').submit(function(e) {
+            $('#edit_companyForm').submit(function(e) {
                 e.preventDefault();
                 const submitBtn = $(this).find('[type="submit"]');
                 submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
                 const formData = {
                   edit_id: $('#edit_id').val(),
-                  edit_name: $('#edit_name').val(),
-                  edit_email: $('#edit_email').val(),
-                  edit_role: $('#edit_role').val()
+                  edit_employee_name: $('#edit_employee_name').val(),
+                  edit_company_name: $('#edit_company_name').val(),
+                  edit_description: $('#edit_description').val(),
+                  edit_location: $('#edit_location').val()
                 };
                 $.ajax({
-                    url: 'userOperation.php?action=update_user',
+                    url: 'companyOperation.php?action=update_company',
                     method: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',
                     success: function(response) {
                         if(response.status === 'success') {
                             showSuccess(response.message, function() {
-                                $('#edit_userModal').modal('hide');
+                                $('#edit_companyModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -455,13 +448,13 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                         showError('An error occurred: ' + xhr.statusText);
                     },
                     complete: function() {
-                        submitBtn.prop('disabled', false).html('Update user');
+                        submitBtn.prop('disabled', false).html('Update company');
                     }
                 });
             });
             // Delete user record
             $(document).on('click', '.deleteBtn', function() {
-                const user_id = $(this).data('id');
+                const company_id = $(this).data('id');
                 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -475,8 +468,8 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'POST',
-                            url: 'userOperation.php?action=delete_user',
-                            data: { id: user_id },
+                            url: 'companyOperation.php?action=delete_company',
+                            data: { id: company_id },
                             dataType: 'json',
                             success: function(res) {
                                 if (res.status === 'success') {
@@ -498,7 +491,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
             // Display user data in table
             function displayData() {
                 $.ajax({
-                    url: 'userOperation.php?action=display_user',
+                    url: 'companyOperation.php?action=display_company',
                     dataType: 'json',
                     success: function(response) {
                         // Check if response is valid and contains data
@@ -511,22 +504,19 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                         response.forEach(row => {
                             tableData += `
                             <tr>
-                                <td>${row.user_id || ''}</td>
-                                <td>${row.name || ''}</td>
-                                <td>${row.email || ''}</td>
-                                <td>${row.role || ''}</td>
-                                <td>${row.created_at || ''}</td>
+                                <td>${row.company_id || ''}</td>
+                                <td>${row.employee_name || ''}</td>
+                                <td>${row.company_name || ''}</td>
+                                <td>${row.description || ''}</td>
+                                <td>${row.location || ''}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm editBtn" 
-                                        data-id="${row.user_id}" 
-                                        data-name="${row.name}"
-                                        data-email="${row.email}"
-                                        data-role="${row.role}">
+                                        data-id="${row.company_id}" 
+                                        data-employee_name="${row.user_id}"
+                                        data-company_name="${row.company_name}"
+                                        data-description="${row.description}"
+                                        data-locations="${row.location}">
                                         Edit
-                                    </button>
-                                    <button class="btn btn-danger btn-sm deleteBtn" 
-                                        data-id="${row.user_id}">
-                                        Delete
                                     </button>
                                 </td>
                             </tr>`;

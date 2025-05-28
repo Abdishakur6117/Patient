@@ -3,7 +3,7 @@ class DatabaseConnection{
     private $hostname="localhost";
     private $username="root";
     private $password="";
-    private $dbname="stock";
+    private $dbname="job";
     private $conn;
     // private $PDO;
 

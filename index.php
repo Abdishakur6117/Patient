@@ -10,11 +10,10 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
 
 // Tirada wax kasta
 $totalUsers = $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0];
-$totalCategories = $conn->query("SELECT COUNT(*) FROM categories")->fetch_row()[0];
-$totalProducts = $conn->query("SELECT COUNT(*) FROM products")->fetch_row()[0];
-$totalSuppliers = $conn->query("SELECT COUNT(*) FROM suppliers")->fetch_row()[0];
-$totalPurchases = $conn->query("SELECT COUNT(*) FROM purchases")->fetch_row()[0];
-$totalSales = $conn->query("SELECT COUNT(*) FROM sales")->fetch_row()[0];
+$totalCompanies = $conn->query("SELECT COUNT(*) FROM companies")->fetch_row()[0];
+$totalJobs = $conn->query("SELECT COUNT(*) FROM jobs")->fetch_row()[0];
+$totalUser_profiles = $conn->query("SELECT COUNT(*) FROM user_profiles")->fetch_row()[0];
+$totalApplications = $conn->query("SELECT COUNT(*) FROM applications")->fetch_row()[0];
 ?>
 
 <!doctype html>
@@ -34,7 +33,7 @@ $totalSales = $conn->query("SELECT COUNT(*) FROM sales")->fetch_row()[0];
     <link rel="stylesheet" href="assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="assets/vendor/charts/c3charts/c3.css">
     <link rel="stylesheet" href="assets/vendor/fonts/flag-icon-css/flag-icon.min.css">
-    <title>Stock Management System</title>
+    <title>Job Portal Management System</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
@@ -70,7 +69,7 @@ $totalSales = $conn->query("SELECT COUNT(*) FROM sales")->fetch_row()[0];
         <!-- ============================================================== -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="index.php">Stock Management System</a>
+                <a class="navbar-brand" href="index.php">Job Portal Management System</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -111,9 +110,11 @@ $totalSales = $conn->query("SELECT COUNT(*) FROM sales")->fetch_row()[0];
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav flex-column">
+
+                            <!-- Dashboard -->
                             <li class="nav-item">
                                 <a class="nav-link margin-top-10" href="index.php">
-                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                    <i class="fas fa-home"></i> Dashboard
                                 </a>
                             </li>
 
@@ -121,7 +122,7 @@ $totalSales = $conn->query("SELECT COUNT(*) FROM sales")->fetch_row()[0];
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-users"
                                     aria-expanded="false" aria-controls="submenu-users">
-                                    <i class="fas fa-users"></i> Users
+                                    <i class="fas fa-user-friends"></i> Users
                                 </a>
                                 <div id="submenu-users" class="collapse submenu">
                                     <ul class="nav flex-column">
@@ -132,90 +133,79 @@ $totalSales = $conn->query("SELECT COUNT(*) FROM sales")->fetch_row()[0];
                                 </div>
                             </li>
 
-                            <!-- Categories -->
+                            <!-- Companies -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-categories"
-                                    aria-expanded="false" aria-controls="submenu-categories">
-                                    <i class="fas fa-tags"></i> Categories
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-companies"
+                                    aria-expanded="false" aria-controls="submenu-companies">
+                                    <i class="fas fa-building"></i> Companies
                                 </a>
-                                <div id="submenu-categories" class="collapse submenu">
+                                <div id="submenu-companies" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/Category.php">List Categories</a>
+                                            <a class="nav-link" href="Admin/company.php">List Companies</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Products -->
+                            <!-- Jobs -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-products"
-                                    aria-expanded="false" aria-controls="submenu-products">
-                                    <i class="fas fa-boxes"></i> Products
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-jobs"
+                                    aria-expanded="false" aria-controls="submenu-jobs">
+                                    <i class="fas fa-briefcase"></i> Jobs
                                 </a>
-                                <div id="submenu-products" class="collapse submenu">
+                                <div id="submenu-jobs" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/Products.php">List Products</a>
+                                            <a class="nav-link" href="Admin/job.php">List Jobs</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Suppliers -->
+                            <!-- User Profiles -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-suppliers"
-                                    aria-expanded="false" aria-controls="submenu-suppliers">
-                                    <i class="fas fa-truck"></i> Suppliers
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-profiles"
+                                    aria-expanded="false" aria-controls="submenu-profiles">
+                                    <i class="fas fa-id-badge"></i> User Profiles
                                 </a>
-                                <div id="submenu-suppliers" class="collapse submenu">
+                                <div id="submenu-profiles" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/Supplier.php">List Suppliers</a>
+                                            <a class="nav-link" href="Admin/userProfile.php">List Profiles</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Purchases -->
+                            <!-- Applications -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-purchases"
-                                    aria-expanded="false" aria-controls="submenu-purchases">
-                                    <i class="fas fa-shopping-cart"></i> Purchases
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-applications"
+                                    aria-expanded="false" aria-controls="submenu-applications">
+                                    <i class="fas fa-file-alt"></i> Applications
                                 </a>
-                                <div id="submenu-purchases" class="collapse submenu">
+                                <div id="submenu-applications" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/Purchase.php">List Purchases</a>
+                                            <a class="nav-link" href="Admin/application.php">List Applications</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Sales -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-sales"
-                                    aria-expanded="false" aria-controls="submenu-sales">
-                                    <i class="fas fa-dollar-sign"></i> Sales
-                                </a>
-                                <div id="submenu-sales" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="Admin/Sale.php">List Sales</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
                             <!-- Reports -->
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-reports"
                                     aria-expanded="false" aria-controls="submenu-reports">
-                                    <i class="fas fa-chart-bar"></i> Reports
+                                    <i class="fas fa-chart-line"></i> Reports
                                 </a>
                                 <div id="submenu-reports" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/supplierReport.php">Supplier Report</a>
+                                            <a class="nav-link" href="Admin/companyReport.php">Company Report</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="Admin/jobSeekerReport.php">Job Seeker Report</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -226,6 +216,7 @@ $totalSales = $conn->query("SELECT COUNT(*) FROM sales")->fetch_row()[0];
                 </nav>
             </div>
         </div>
+
         <!-- ============================================================== -->
         <!-- end left sidebar -->
         <!-- ============================================================== -->
@@ -260,126 +251,72 @@ $totalSales = $conn->query("SELECT COUNT(*) FROM sales")->fetch_row()[0];
                                             <h5 class="card-title">Users</h5>
                                             <h3><?php echo $totalUsers; ?></h3>
                                         </div>
-                                        <i class="fa fa-users fa-2x"></i>
+                                        <i class="fas fa-user-friends fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Categories -->
+                            <!-- Companies -->
                             <div class="col-md-3 mb-4">
                                 <div class="card text-white bg-success">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Categories</h5>
-                                            <h3><?php echo $totalCategories; ?></h3>
+                                            <h5 class="card-title">Companies</h5>
+                                            <h3><?php echo $totalCompanies; ?></h3>
                                         </div>
-                                        <i class="fa fa-tags fa-2x"></i>
+                                        <i class="fas fa-building fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Products -->
+                            <!-- Jobs -->
                             <div class="col-md-3 mb-4">
                                 <div class="card text-white bg-info">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Products</h5>
-                                            <h3><?php echo $totalProducts; ?></h3>
+                                            <h5 class="card-title">Jobs</h5>
+                                            <h3><?php echo $totalJobs; ?></h3>
                                         </div>
-                                        <i class="fa fa-boxes fa-2x"></i>
+                                        <i class="fas fa-briefcase fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Suppliers -->
+                            <!-- User Profiles -->
                             <div class="col-md-3 mb-4">
                                 <div class="card text-white bg-warning">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Suppliers</h5>
-                                            <h3><?php echo $totalSuppliers; ?></h3>
+                                            <h5 class="card-title">User Profiles</h5>
+                                            <h3><?php echo $totalUser_profiles; ?></h3>
                                         </div>
-                                        <i class="fa fa-truck fa-2x"></i>
+                                        <i class="fas fa-id-badge fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Purchases -->
+                            <!-- Applications -->
                             <div class="col-md-3 mb-4">
                                 <div class="card text-white bg-danger">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Purchases</h5>
-                                            <h3><?php echo $totalPurchases; ?></h3>
+                                            <h5 class="card-title">Applications</h5>
+                                            <h3><?php echo $totalApplications; ?></h3>
                                         </div>
-                                        <i class="fa fa-shopping-cart fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Purchase Details -->
-                            <div class="col-md-3 mb-4">
-                                <div class="card text-white bg-secondary">
-                                    <div class="card-body d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h5 class="card-title">Purchase Details</h5>
-                                            <h3><?php echo $totalPurchaseDetails; ?></h3>
-                                        </div>
-                                        <i class="fa fa-file-invoice fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Sales -->
-                            <div class="col-md-3 mb-4">
-                                <div class="card text-white bg-dark">
-                                    <div class="card-body d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h5 class="card-title">Sales</h5>
-                                            <h3><?php echo $totalSales; ?></h3>
-                                        </div>
-                                        <i class="fa fa-dollar-sign fa-2x"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Sale Details -->
-                            <div class="col-md-3 mb-4">
-                                <div class="card text-white bg-dark">
-                                    <div class="card-body d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h5 class="card-title">Sale Details</h5>
-                                            <h3><?php echo $totalSaleDetails; ?></h3>
-                                        </div>
-                                        <i class="fa fa-receipt fa-2x"></i>
+                                        <i class="fas fa-file-alt fa-2x"></i>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </div>
+
 
                 </div>
             </div>
             <!-- ============================================================== -->
             <!-- footer -->
             <!-- ============================================================== -->
-            <div class="footer">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                             Copyright © 2018 Concept. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
-                        </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                            <div class="text-md-right footer-links d-none d-sm-block">
-                                <a href="javascript: void(0);">About</a>
-                                <a href="javascript: void(0);">Support</a>
-                                <a href="javascript: void(0);">Contact Us</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <!-- ============================================================== -->
             <!-- end footer -->
             <!-- ============================================================== -->

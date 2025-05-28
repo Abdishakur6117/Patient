@@ -216,18 +216,20 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         <div class="dashboard-wrapper">
             <div class="dashboard-ecommerce">
                 <div class="container-fluid dashboard-content ">
-                    <h2>User Form</h2>
-                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add User</button>
+                    <h2>UserProfile Form</h2>
+                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add UserProfile</button>
                     <br>
                     <br>
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <td>ID</td>
-                                <td>name</td>
-                                <td>Email</td>
-                                <td>Role</td>
-                                <td>Created at</td>
+                                <td>Job Seeker Name</td>
+                                <td>Phone</td>
+                                <td>Address</td>
+                                <td>Education</td>
+                                <td>Experience</td>
+                                <td>Skills</td>
                                 <td>Actions</td>
                             </tr>
                         </thead>
@@ -236,51 +238,54 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     </table>
                 </div>
                 <!--/   INsert Modal start -->
-                <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="userProfileModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add New User</h5>
+                                <h5 class="modal-title">Add New UserProfile</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="userForm" method="POST" action="">
+                                <form id="userProfileForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="text" class="form-control" id="name" name="name">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="email">Email </label>
-                                                <input type="email" class="form-control" id="email" name="email">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">Password </label>
-                                                <input type="password" class="form-control" id="password" name="password">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">ConfirmPassword </label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="role" id="role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="admin">admin</option>
-                                                    <option value="employee">employee</option>
-                                                    <option value="job_seeker">job_seeker</option>
+                                                <label for="jobSeeker">JobSeeker Name </label>
+                                                <select class="form-control" name="jobSeeker_name" id="jobSeeker_name">
+                                                    <option value="">Select Job Seeker</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="phone">Phone </label>
+                                                <input type="number" class="form-control" id="phone" name="phone">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="address">Address </label>
+                                                <input type="text" class="form-control" id="address" name="address">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="education">Education </label>
+                                                <input type="text" class="form-control" id="education" name="education">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="experience">Experience </label>
+                                                <input type="text" class="form-control" id="experience" name="experience">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="skills">Skills </label>
+                                                <input type="text" class="form-control" id="skills" name="skills">
                                             </div>
                                         </div>
                                     </div>
@@ -295,40 +300,55 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                 </div>
                 <!--/   INsert Modal end -->
                 <!-- start Update Model  -->
-                <div class="modal fade" id="edit_userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="edit_userProfileModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Update Users</h5>
+                                <h5 class="modal-title">Update UserProfile</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="edit_userForm" method="POST" action="">
+                                <form id="edit_userProfileForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
+                                                <label for="jobSeeker">JobSeeker Name </label>
                                                 <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                                <input type="text" class="form-control" id="edit_name" name="edit_name">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="email">Email </label>
-                                                <input type="email" class="form-control" id="edit_email" name="edit_email">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="edit_role" id="edit_role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="admin">admin</option>
-                                                    <option value="employee">employee</option>
-                                                    <option value="job_seeker">job_seeker</option>
+                                                <select class="form-control" name="edit_jobSeeker_name" id="edit_jobSeeker_name">
+                                                    <option value="">Select Job Seeker</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="phone">Phone </label>
+                                                <input type="number" class="form-control" id="edit_phone" name="edit_phone">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="address">Address </label>
+                                                <input type="text" class="form-control" id="edit_address" name="edit_address">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="education">Education </label>
+                                                <input type="text" class="form-control" id="edit_education" name="edit_education">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="experience">Experience </label>
+                                                <input type="text" class="form-control" id="edit_experience" name="edit_experience">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="skills">Skills </label>
+                                                <input type="text" class="form-control" id="edit_skills" name="edit_skills">
                                             </div>
                                         </div>
                                     </div>
@@ -376,26 +396,53 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         $(document).ready(function() {
             // Initialize modals and load data
             $('#insertModal').click(function() {
-                $('#userModal').modal('show');
-                $('#userForm')[0].reset();
+                $('#userProfileModal').modal('show');
+                $('#userProfileForm')[0].reset();
             });
             
             // Initial data loading
             displayData();
-            
+            loadJobSeeker();
+
+            // Load aircraft for dropdown
+            function loadJobSeeker() {
+                $.ajax({
+                    url: 'userProfileOperation.php?action=get_job_seeker',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if(response.status === 'success' && response.data) {
+                            const $select = $('#jobSeeker_name, #edit_jobSeeker_name');
+                            $select.empty().append('<option value="">Select Job Seeker</option>');
+                            
+                            response.data.forEach(jobSeeker => {
+                                $select.append($('<option>', {
+                                    value: jobSeeker.user_id,
+                                    text: jobSeeker.job_seeker_name
+                                }));
+                            });
+                        } else {
+                            showError('Failed to load Job Seeker');
+                        }
+                    },
+                    error: function() {
+                        showError('Network error loading Job Seeker');
+                    }
+                });
+            }
             // Create user record
-            $('#userForm').submit(function(e) {
+            $('#userProfileForm').submit(function(e) {
                 e.preventDefault();
                 
                 $.ajax({
                     type: 'POST',
-                    url: 'userOperation.php?action=create_user',
+                    url: 'userProfileOperation.php?action=create_userProfile',
                     data: $(this).serialize(),
                     dataType: "json",
                     success: function(res) {
                         if (res.status === 'success') {
                             showSuccess(res.message, function() {
-                                $('#userModal').modal('hide');
+                                $('#userProfileModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -410,41 +457,50 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
             
             // Edit user record
             $(document).on('click', '.editBtn', function() {
-                const userData = {
+                const userProfileData = {
                     id: $(this).data('id'),
-                    name: $(this).data('name'),
-                    email: $(this).data('email'),
-                    role: $(this).data('role')
+                    job_seeker_name: $(this).data('job_seeker_name'),
+                    phone: $(this).data('phone'),
+                    address: $(this).data('address'),
+                    education: $(this).data('education'),
+                    experience: $(this).data('experience'),
+                    skill: $(this).data('skill')
                 };
                 
-                $('#edit_id').val(userData.id);
-                $('#edit_name').val(userData.name);
-                $('#edit_email').val(userData.email);
-                $('#edit_role').val(userData.role);
+                $('#edit_id').val(userProfileData.id);
+                $('#edit_jobSeeker_name').val(userProfileData.job_seeker_name);
+                $('#edit_phone').val(userProfileData.phone);
+                $('#edit_address').val(userProfileData.address);
+                $('#edit_education').val(userProfileData.education);
+                $('#edit_experience').val(userProfileData.experience);
+                $('#edit_skills').val(userProfileData.skill);
                 
-                $('#edit_userModal').modal('show');
+                $('#edit_userProfileModal').modal('show');
             });
             
             // Update user record
-            $('#edit_userForm').submit(function(e) {
+            $('#edit_userProfileForm').submit(function(e) {
                 e.preventDefault();
                 const submitBtn = $(this).find('[type="submit"]');
                 submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
                 const formData = {
                   edit_id: $('#edit_id').val(),
-                  edit_name: $('#edit_name').val(),
-                  edit_email: $('#edit_email').val(),
-                  edit_role: $('#edit_role').val()
+                  edit_jobSeeker_name: $('#edit_jobSeeker_name').val(),
+                  edit_phone: $('#edit_phone').val(),
+                  edit_address: $('#edit_address').val(),
+                  edit_education: $('#edit_education').val(),
+                  edit_experience: $('#edit_experience').val(),
+                  edit_skills: $('#edit_skills').val()
                 };
                 $.ajax({
-                    url: 'userOperation.php?action=update_user',
+                    url: 'userProfileOperation.php?action=update_userProfile',
                     method: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',
                     success: function(response) {
                         if(response.status === 'success') {
                             showSuccess(response.message, function() {
-                                $('#edit_userModal').modal('hide');
+                                $('#edit_userProfileModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -455,13 +511,13 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                         showError('An error occurred: ' + xhr.statusText);
                     },
                     complete: function() {
-                        submitBtn.prop('disabled', false).html('Update user');
+                        submitBtn.prop('disabled', false).html('Update userProfile');
                     }
                 });
             });
             // Delete user record
             $(document).on('click', '.deleteBtn', function() {
-                const user_id = $(this).data('id');
+                const userProfile_id = $(this).data('id');
                 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -475,8 +531,8 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'POST',
-                            url: 'userOperation.php?action=delete_user',
-                            data: { id: user_id },
+                            url: 'userProfileOperation.php?action=delete_userProfile',
+                            data: { id: userProfile_id },
                             dataType: 'json',
                             success: function(res) {
                                 if (res.status === 'success') {
@@ -498,7 +554,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
             // Display user data in table
             function displayData() {
                 $.ajax({
-                    url: 'userOperation.php?action=display_user',
+                    url: 'userProfileOperation.php?action=display_userProfile',
                     dataType: 'json',
                     success: function(response) {
                         // Check if response is valid and contains data
@@ -511,21 +567,26 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                         response.forEach(row => {
                             tableData += `
                             <tr>
-                                <td>${row.user_id || ''}</td>
-                                <td>${row.name || ''}</td>
-                                <td>${row.email || ''}</td>
-                                <td>${row.role || ''}</td>
-                                <td>${row.created_at || ''}</td>
+                                <td>${row.profile_id || ''}</td>
+                                <td>${row.job_seeker_name || ''}</td>
+                                <td>${row.phone || ''}</td>
+                                <td>${row.address || ''}</td>
+                                <td>${row.education || ''}</td>
+                                <td>${row.experience || ''}</td>
+                                <td>${row.skills || ''}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm editBtn" 
-                                        data-id="${row.user_id}" 
-                                        data-name="${row.name}"
-                                        data-email="${row.email}"
-                                        data-role="${row.role}">
+                                        data-id="${row.profile_id}" 
+                                        data-job_seeker_name="${row.user_id}"
+                                        data-phone="${row.phone}"
+                                        data-address="${row.address}"
+                                        data-education="${row.education}"
+                                        data-experience="${row.experience}"
+                                        data-skill="${row.skills}">
                                         Edit
                                     </button>
                                     <button class="btn btn-danger btn-sm deleteBtn" 
-                                        data-id="${row.user_id}">
+                                        data-id="${row.profile_id}">
                                         Delete
                                     </button>
                                 </td>

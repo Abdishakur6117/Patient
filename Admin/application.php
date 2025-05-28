@@ -216,18 +216,19 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
         <div class="dashboard-wrapper">
             <div class="dashboard-ecommerce">
                 <div class="container-fluid dashboard-content ">
-                    <h2>User Form</h2>
-                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add User</button>
+                    <h2>Application Form</h2>
+                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add Application</button>
                     <br>
                     <br>
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <td>ID</td>
-                                <td>name</td>
-                                <td>Email</td>
-                                <td>Role</td>
-                                <td>Created at</td>
+                                <td>Job Name</td>
+                                <td>Job Seeker Name</td>
+                                <td>Resume</td>
+                                <td>Applied at</td>
+                                <td>Status</td>
                                 <td>Actions</td>
                             </tr>
                         </thead>
@@ -236,50 +237,48 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                     </table>
                 </div>
                 <!--/   INsert Modal start -->
-                <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="applicationModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add New User</h5>
+                                <h5 class="modal-title">Add New Application</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="userForm" method="POST" action="">
+                                <form id="applicationForm" method="POST" action=""  enctype="multipart/form-data"> 
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="text" class="form-control" id="name" name="name">
+                                                <label for="job">Job Name </label>
+                                                <select class="form-control" name="job_name" id="job_name">
+                                                    <option value="">Select Job </option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="email">Email </label>
-                                                <input type="email" class="form-control" id="email" name="email">
+                                                <label for="job_seeker">Job seeker Name </label>
+                                                <select class="form-control" name="job_seeker_name" id="job_seeker_name">
+                                                    <option value="">Select job seeker </option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="password">Password </label>
-                                                <input type="password" class="form-control" id="password" name="password">
+                                                <label for="resume">Resume </label>
+                                                <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.doc,.docx">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="password">ConfirmPassword </label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="role" id="role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="admin">admin</option>
-                                                    <option value="employee">employee</option>
-                                                    <option value="job_seeker">job_seeker</option>
+                                                <label for="address">Status </label>
+                                                <select class="form-control"  name="status" id="status">
+                                                    <option value="">Select Status</option>
+                                                    <option value="accepted">accepted</option>
+                                                    <option value="pending">pending</option>
+                                                    <option value="rejected">rejected</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -295,39 +294,50 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                 </div>
                 <!--/   INsert Modal end -->
                 <!-- start Update Model  -->
-                <div class="modal fade" id="edit_userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="edit_applicationModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Update Users</h5>
+                                <h5 class="modal-title">Update Application</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="edit_userForm" method="POST" action="">
+                            <form id="edit_applicationForm" method="POST" action=""  enctype="multipart/form-data"> 
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
+                                                <label for="job">Job Name </label>
                                                 <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                                <input type="text" class="form-control" id="edit_name" name="edit_name">
+                                                <select class="form-control" name="edit_job_name" id="edit_job_name">
+                                                    <option value="">Select Job </option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="email">Email </label>
-                                                <input type="email" class="form-control" id="edit_email" name="edit_email">
+                                                <label for="job_seeker">Job seeker Name </label>
+                                                <select class="form-control" name="edit_job_seeker_name" id="edit_job_seeker_name">
+                                                    <option value="">Select job seeker </option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="edit_role" id="edit_role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="admin">admin</option>
-                                                    <option value="employee">employee</option>
-                                                    <option value="job_seeker">job_seeker</option>
+                                                <label for="resume">Resume </label>
+                                                <div id="current_resume_filename"></div>
+                                                <input type="file" class="form-control" id="edit_resume" name="edit_resume" accept=".pdf,.doc,.docx">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="address">Status </label>
+                                                <select class="form-control"  name="edit_status" id="edit_status">
+                                                    <option value="">Select Status</option>
+                                                    <option value="accepted">accepted</option>
+                                                    <option value="pending">pending</option>
+                                                    <option value="rejected">rejected</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -336,7 +346,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         <button type="submit" class="btn btn-primary">Update</button>
                                     </div>
-                                </form>
+                            </form>
                             </div>
                         </div>
                     </div>
@@ -372,213 +382,308 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
  <script src="../assets/vendor/jquery/jquery-3.3.1.min.js"></script>
  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Initialize modals and load data
-            $('#insertModal').click(function() {
-                $('#userModal').modal('show');
-                $('#userForm')[0].reset();
-            });
-            
-            // Initial data loading
-            displayData();
-            
-            // Create user record
-            $('#userForm').submit(function(e) {
-                e.preventDefault();
-                
-                $.ajax({
-                    type: 'POST',
-                    url: 'userOperation.php?action=create_user',
-                    data: $(this).serialize(),
-                    dataType: "json",
-                    success: function(res) {
-                        if (res.status === 'success') {
-                            showSuccess(res.message, function() {
-                                $('#userModal').modal('hide');
-                                displayData();
-                            });
-                        } else {
-                            showError(res.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        showError('An error occurred: ' + error);
-                    }
-                });
-            });
-            
-            // Edit user record
-            $(document).on('click', '.editBtn', function() {
-                const userData = {
-                    id: $(this).data('id'),
-                    name: $(this).data('name'),
-                    email: $(this).data('email'),
-                    role: $(this).data('role')
-                };
-                
-                $('#edit_id').val(userData.id);
-                $('#edit_name').val(userData.name);
-                $('#edit_email').val(userData.email);
-                $('#edit_role').val(userData.role);
-                
-                $('#edit_userModal').modal('show');
-            });
-            
-            // Update user record
-            $('#edit_userForm').submit(function(e) {
-                e.preventDefault();
-                const submitBtn = $(this).find('[type="submit"]');
-                submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
-                const formData = {
-                  edit_id: $('#edit_id').val(),
-                  edit_name: $('#edit_name').val(),
-                  edit_email: $('#edit_email').val(),
-                  edit_role: $('#edit_role').val()
-                };
-                $.ajax({
-                    url: 'userOperation.php?action=update_user',
-                    method: 'POST',
-                    data: $(this).serialize(),
-                    dataType: 'json',
-                    success: function(response) {
-                        if(response.status === 'success') {
-                            showSuccess(response.message, function() {
-                                $('#edit_userModal').modal('hide');
-                                displayData();
-                            });
-                        } else {
-                            showError(response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        showError('An error occurred: ' + xhr.statusText);
-                    },
-                    complete: function() {
-                        submitBtn.prop('disabled', false).html('Update user');
-                    }
-                });
-            });
-            // Delete user record
-            $(document).on('click', '.deleteBtn', function() {
-                const user_id = $(this).data('id');
-                
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: 'POST',
-                            url: 'userOperation.php?action=delete_user',
-                            data: { id: user_id },
-                            dataType: 'json',
-                            success: function(res) {
-                                if (res.status === 'success') {
-                                    showSuccess(res.message, function() {
-                                        displayData();
-                                    });
-                                } else {
-                                    showError(res.message);
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                showError('An error occurred: ' + error);
-                            }
+<script>
+    $(document).ready(function() {
+        // Initialize modals and load data
+        $('#insertModal').click(function() {
+            $('#applicationModal').modal('show');
+            $('#applicationForm')[0].reset();
+        });
+        
+        // Initial data loading
+        displayData();
+        loadJob();
+        loadUser();
+
+        // Load aircraft for dropdown
+        function loadJob() {
+            $.ajax({
+                url: 'applicationOperation.php?action=get_job',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if(response.status === 'success' && response.data) {
+                        const $select = $('#job_name, #edit_job_name');
+                        $select.empty().append('<option value="">Select Job</option>');
+                        
+                        response.data.forEach(job => {
+                            $select.append($('<option>', {
+                                value: job.job_id,
+                                text: job.job_name
+                            }));
                         });
+                    } else {
+                        showError('Failed to load Job');
                     }
-                });
+                },
+                error: function() {
+                    showError('Network error loading Job');
+                }
             });
+        }
+        function loadUser() {
+            $.ajax({
+                url: 'applicationOperation.php?action=get_job_seeker',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if(response.status === 'success' && response.data) {
+                        const $select = $('#job_seeker_name, #edit_job_seeker_name');
+                        $select.empty().append('<option value="">Select Job Seeker </option>');
+                        
+                        response.data.forEach(job_seeker => {
+                            $select.append($('<option>', {
+                                value: job_seeker.user_id,
+                                text: job_seeker.job_seeker_name
+                            }));
+                        });
+                    } else {
+                        showError('Failed to load Job seeker');
+                    }
+                },
+                error: function() {
+                    showError('Network error loading Job seeker');
+                }
+            });
+        }
+        // Create user record
+        $('#applicationForm').submit(function(e) {
+            e.preventDefault();
             
-            // Display user data in table
-            function displayData() {
-                $.ajax({
-                    url: 'userOperation.php?action=display_user',
-                    dataType: 'json',
-                    success: function(response) {
-                        // Check if response is valid and contains data
-                        if (!response || !Array.isArray(response)) {
-                            showError('Invalid data received from server');
+            // Create FormData object
+            var formData = new FormData(this);
+            
+            $.ajax({
+                type: 'POST',
+                url: 'applicationOperation.php?action=create_application',
+                data: formData,
+                processData: false,  // Important for file uploads
+                contentType: false,  // Important for file uploads
+                dataType: "json",
+                success: function(res) {
+                    if (res.status === 'success') {
+                        showSuccess(res.message, function() {
+                            $('#applicationModal').modal('hide');
+                            displayData();
+                        });
+                    } else {
+                        showError(res.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showError('An error occurred: ' + error);
+                }
+            });
+        });
+        
+        // Edit user record
+        $(document).on('click', '.editBtn', function() {
+            const applicationData = {
+                id: $(this).data('id'),
+                job_name: $(this).data('job_name'),
+                job_seeker_name: $(this).data('job_seeker_name'),
+                resume: $(this).data('resume'),
+                status: $(this).data('status')
+            };
+            
+            $('#edit_id').val(applicationData.id);
+            $('#edit_job_name').val(applicationData.job_name);
+            $('#edit_job_seeker_name').val(applicationData.job_seeker_name);
+            $('#edit_status').val(applicationData.status);
+            $('#current_resume_filename').text(applicationData.resume);
+            
+            $('#edit_resume').val('');
+            
+            $('#edit_applicationModal').modal('show');
+        });
+        
+        // Submit Edit Form via AJAX
+        $('#edit_applicationForm').on('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const submitBtn = $(this).find('[type="submit"]');
+
+            submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
+
+            $.ajax({
+                url: 'applicationOperation.php?action=update_application',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    // Debug output (comment this out in production)
+                    // console.log("Server response:", response);
+
+                    let res = response;
+
+                    // If response is a string, parse JSON (sometimes jQuery auto-parses)
+                    if (typeof response === 'string') {
+                        try {
+                            res = JSON.parse(response);
+                        } catch (e) {
+                            showError('Invalid response from server.');
+                            submitBtn.prop('disabled', false).html('Save');
                             return;
                         }
-                        
-                        let tableData = '';
-                        response.forEach(row => {
-                            tableData += `
-                            <tr>
-                                <td>${row.user_id || ''}</td>
-                                <td>${row.name || ''}</td>
-                                <td>${row.email || ''}</td>
-                                <td>${row.role || ''}</td>
-                                <td>${row.created_at || ''}</td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm editBtn" 
-                                        data-id="${row.user_id}" 
-                                        data-name="${row.name}"
-                                        data-email="${row.email}"
-                                        data-role="${row.role}">
-                                        Edit
-                                    </button>
-                                    <button class="btn btn-danger btn-sm deleteBtn" 
-                                        data-id="${row.user_id}">
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>`;
-                        });
-                        
-                        // Check if DataTable exists before destroying
-                        if ($.fn.DataTable && $.fn.DataTable.isDataTable('#dataTable')) {
-                            $('#dataTable').DataTable().destroy();
-                        }
-                        
-                        $('#dataTable tbody').html(tableData);
-                        initDataTable();
-                    },
-                    error: function(xhr, status, error) {
-                        showError('Failed to load user data: ' + error);
                     }
-                });
-            }
-            
-            // Initialize DataTable
-            function initDataTable() {
-                $('#dataTable').DataTable({
-                    paging: true,
-                    searching: true,
-                    ordering: true,
-                    responsive: true
-                });
-            }
 
-            
-            // Helper function to show success messages
-            function showSuccess(message, callback) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: message,
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    timer: 3000
-                }).then(callback);
-            }
-            
-            // Helper function to show error messages
-            function showError(message) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: message,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
+                    if (res.status === 'success') {
+                        showSuccess(res.message, function() {
+                            $('#edit_applicationModal').modal('hide');
+                            location.reload();
+                        });
+                    } else {
+                        showError(res.message || 'Update failed.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    showError('Error: ' + error);
+                },
+                complete: function() {
+                    submitBtn.prop('disabled', false).html('Save');
+                }
+            });
         });
-    </script>
+        // Delete user record
+        $(document).on('click', '.deleteBtn', function() {
+            const application_id = $(this).data('id');
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'applicationOperation.php?action=delete_application',
+                        data: { id: application_id },
+                        dataType: 'json',
+                        success: function(res) {
+                            if (res.status === 'success') {
+                                showSuccess(res.message, function() {
+                                    displayData();
+                                });
+                            } else {
+                                showError(res.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            showError('An error occurred: ' + error);
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Display user data in table
+        function displayData() {
+            $.ajax({
+                url: 'applicationOperation.php?action=display_application',
+                dataType: 'json',
+                success: function(response) {
+                    // Check if response is valid and contains data
+                    if (!response || !Array.isArray(response)) {
+                        showError('Invalid data received from server');
+                        return;
+                    }
+                    
+                    let tableData = '';
+                    response.forEach(row => {
+                        tableData += `
+                        <tr>
+                            <td>${row.application_id || ''}</td>
+                            <td>${row.job_name || ''}</td>
+                            <td>${row.job_seeker_name || ''}</td>
+                            <td>${row.resume || ''}</td>
+                            <td>${row.applied_at || ''}</td>
+                            <td>${row.status || ''}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm editBtn" 
+                                    data-id="${row.application_id}" 
+                                    data-job_name="${row.job_id}"
+                                    data-job_seeker_name="${row.user_id}"
+                                    data-resume="${row.resume}"
+                                    data-applied_at="${row.applied_at}"
+                                    data-status="${row.status}">
+                                    Edit
+                                </button>
+                                <button class="btn btn-danger btn-sm deleteBtn" 
+                                    data-id="${row.application_id}">
+                                    Delete
+                                </button>
+                                <button class="btn btn-info btn-sm viewCvBtn" 
+                                    data-resume="${row.resume}">
+                                    View CV
+                                </button>
+                            </td>
+                        </tr>`;
+                    });
+                    
+                    // Check if DataTable exists before destroying
+                    if ($.fn.DataTable && $.fn.DataTable.isDataTable('#dataTable')) {
+                        $('#dataTable').DataTable().destroy();
+                    }
+                    
+                    $('#dataTable tbody').html(tableData);
+                    initDataTable();
+
+                    // Event listener for View CV buttons
+                    $('.viewCvBtn').on('click', function() {
+                        const resumeFile = $(this).data('resume');
+                        if (resumeFile) {
+                            const url = '../uploads/resumes/' + resumeFile;
+                            window.open(url, '_blank');
+                        } else {
+                            showError('No resume file available.');
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    showError('Failed to load user data: ' + error);
+                }
+            });
+        }
+
+        // Initialize DataTable
+        function initDataTable() {
+            $('#dataTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                responsive: true
+            });
+        }
+
+        
+        // Helper function to show success messages
+        function showSuccess(message, callback) {
+            Swal.fire({
+                title: 'Success!',
+                text: message,
+                icon: 'success',
+                confirmButtonText: 'OK',
+                timer: 3000
+            }).then(callback);
+        }
+        
+        // Helper function to show error messages
+        function showError(message) {
+            Swal.fire({
+                title: 'Error!',
+                text: message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+</script>
     
     <!-- bootstap bundle js -->
     <!-- slimscroll js -->

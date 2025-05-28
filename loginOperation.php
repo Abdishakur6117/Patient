@@ -7,11 +7,11 @@ function login() {
     $db = new DatabaseConnection();
     $conn = $db->getConnection();
 
-    $username = $_POST['username'] ?? '';
+    $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    if (!$username) {
-        echo json_encode(["status" => "error", "message" => 'Username is required']);
+    if (!$email) {
+        echo json_encode(["status" => "error", "message" => 'Email is required']);
         return;
     }
     if (!$password) {
@@ -20,15 +20,15 @@ function login() {
     }
 
     // ---------- 1. Check in users table (username only) ----------
-    $queryUser = 'SELECT * FROM users WHERE username = :username';
+    $queryUser = 'SELECT * FROM users WHERE email = :email';
     $stmUser = $conn->prepare($queryUser);
-    $stmUser->execute(['username' => $username]);
+    $stmUser->execute(['email' => $email]);
     $userData = $stmUser->fetch(PDO::FETCH_ASSOC);
 
     if ($userData) {
         if ($password == $userData['password']) {
             session_start();
-            $_SESSION['user'] = $userData['username'];
+            $_SESSION['user'] = $userData['email'];
             $_SESSION['user_id'] = $userData['user_id'];
             $_SESSION['role'] = $userData['role'];
 
@@ -43,8 +43,5 @@ function login() {
             return;
         }
     }
-
-    // ---------- If no match in users table ----------
-    echo json_encode(["status" => "error", "message" => 'User not found']);
 }
 ?>
