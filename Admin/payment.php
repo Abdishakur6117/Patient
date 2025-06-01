@@ -246,18 +246,20 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
         <div class="dashboard-wrapper">
             <div class="dashboard-ecommerce">
                 <div class="container-fluid dashboard-content ">
-                    <h2>User Form</h2>
-                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add User</button>
+                    <h2>payment Form</h2>
+                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add payment</button>
                     <br>
                     <br>
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <td>ID</td>
-                                <td>Username</td>
-                                <td>Role</td>
+                                <td>Patient Name</td>
+                                <td>Amount</td>
+                                <td>Amount paid</td>
+                                <td>Remainder</td>
+                                <td>Payment Date</td>
                                 <td>Status</td>
-                                <td>Created at</td>
                                 <td>Actions</td>
                             </tr>
                         </thead>
@@ -266,71 +268,42 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                     </table>
                 </div>
                 <!--/   INsert Modal start -->
-                <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add New User</h5>
+                                <h5 class="modal-title">Add New payment</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="userForm" method="POST" action="">
+                                <form id="paymentForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="text" class="form-control" id="username" name="username">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">Password </label>
-                                                <input type="password" class="form-control" id="password" name="password">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">ConfirmPassword </label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="role" id="role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Doctor">Doctor</option>
-                                                    <option value="Patient">Patient</option>
+                                                <label for="patient">Patient Name </label>
+                                                <select class="form-control" name="patient_id" id="patient_id">
+                                                    <option value="">Select Patients</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Status </label>
-                                                <select class="form-control" name="status" id="status">
-                                                    <option value="">Select Status</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
-                                                </select>
+                                                <label for="amount">Amount </label>
+                                                <input type="number" class="form-control" id="amount" name="amount" readonly > 
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Doctor </label>
-                                                <select class="form-control" name="related_doctor_id" id="related_doctor_id">
-                                                    <option value="">Select Doctor</option>
-                                                </select>
+                                                <label for="paid">Amount paid </label>
+                                                <input type="number" class="form-control" id="amount_paid" name="amount_paid">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Patient </label>
-                                                <select class="form-control" name="related_patient_id" id="related_patient_id">
-                                                    <option value="">Select Patient</option>
-                                                </select>
+                                                <label for="payment">Payment Date </label>
+                                                <input type="date" class="form-control" id="payment_date" name="payment_date">
                                             </div>
                                         </div>
                                     </div>
@@ -345,60 +318,43 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 </div>
                 <!--/   INsert Modal end -->
                 <!-- start Update Model  -->
-                <div class="modal fade" id="edit_userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="edit_paymentModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Update Users</h5>
+                                <h5 class="modal-title">Update payment</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="edit_userForm" method="POST" action="">
-                                    <div class="row">
+                                <form id="edit_paymentForm" method="POST" action="">
+                                <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                                <input type="text" class="form-control" id="edit_username" name="edit_username">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="edit_role" id="edit_role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Doctor">Doctor</option>
-                                                    <option value="Patient">Patient</option>
+                                                <label for="patient">Patient Name </label>
+                                                <input type="hidden" class="form-control" id="edit_id" name="edit_id"> 
+                                                <select class="form-control" name="edit_patient_id" id="edit_patient_id">
+                                                    <option value="">Select Patients</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Status </label>
-                                                <select class="form-control" name="edit_status" id="edit_status">
-                                                    <option value="">Select Status</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
-                                                </select>
+                                                <label for="amount">Amount </label>
+                                                <input type="number" class="form-control" id="edit_amount" name="edit_amount" readonly > 
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Doctor </label>
-                                                <select class="form-control" name="edit_related_doctor_id" id="edit_related_doctor_id">
-                                                    <option value="">Select Doctor</option>
-                                                </select>
+                                                <label for="paid">Amount paid </label>
+                                                <input type="number" class="form-control" id="edit_amount_paid" name="edit_amount_paid">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Patient </label>
-                                                <select class="form-control" name="edit_related_patient_id" id="edit_related_patient_id">
-                                                    <option value="">Select Patient</option>
-                                                </select>
+                                                <label for="payment">Payment Date </label>
+                                                <input type="date" class="form-control" id="edit_payment_date" name="edit_payment_date">
                                             </div>
                                         </div>
                                     </div>
@@ -446,79 +402,75 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
         $(document).ready(function() {
             // Initialize modals and load data
             $('#insertModal').click(function() {
-                $('#userModal').modal('show');
-                $('#userForm')[0].reset();
+                $('#paymentModal').modal('show');
+                $('#paymentForm')[0].reset();
             });
             
             // Initial data loading
             displayData();
-            loadDoctor();
             loadPatient();
-            // Load doctor for dropdown
-            function loadDoctor() {
-                $.ajax({
-                    url: 'appointmentOperation.php?action=get_doctor',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        if(response.status === 'success' && response.data) {
-                            const $select = $('#related_doctor_id, #edit_related_doctor_id');
-                            $select.empty().append('<option value="">Select Doctor</option>');
-                            
-                            response.data.forEach(doctor => {
-                                $select.append($('<option>', {
-                                    value: doctor.doctor_id,
-                                    text: doctor.doctor_name
-                                }));
-                            });
-                        } else {
-                            showError('Failed to load Doctor');
-                        }
-                    },
-                    error: function() {
-                        showError('Network error loading Doctor');
-                    }
-                });
-            }
-            // Load doctor for dropdown
+            // Load patient for dropdown
             function loadPatient() {
                 $.ajax({
-                    url: 'appointmentOperation.php?action=get_patient',
+                    url: 'paymentOperation.php?action=get_patient',
                     method: 'GET',
                     dataType: 'json',
                     success: function(response) {
-                        if(response.status === 'success' && response.data) {
-                            const $select = $('#related_patient_id, #edit_related_patient_id');
-                            $select.empty().append('<option value="">Select Patient</option>');
-                            
+                        if (response.status === 'success' && response.data) {
+                            const $selectNew = $('#patient_id');
+                            const $selectEdit = $('#edit_patient_id');
+
+                            // Empty both select fields
+                            $selectNew.empty().append('<option value="">Select Patient</option>');
+                            $selectEdit.empty().append('<option value="">Select Patient</option>');
+
                             response.data.forEach(patient => {
-                                $select.append($('<option>', {
-                                    value: patient.patient_id,
-                                    text: patient.patient_name
-                                }));
+                                const option = $('<option>', {
+                                    value: patient._id,
+                                    text: patient.patient_name,
+                                    'data-charge': patient.total_charge
+                                });
+
+                                // Append to both selects
+                                $selectNew.append(option.clone());
+                                $selectEdit.append(option.clone());
                             });
+
+                            // ⚙️ On change for create form
+                            $selectNew.off('change').on('change', function () {
+                                const charge = $(this).find(':selected').data('charge');
+                                $('#amount').val(charge || '');
+                            });
+
+                            // ⚙️ On change for edit form
+                            $selectEdit.off('change').on('change', function () {
+                                const charge = $(this).find(':selected').data('charge');
+                                $('#edit_amount').val(charge || '');
+                            });
+
                         } else {
-                            showError('Failed to load Patient');
+                            showError('Failed to load patients');
                         }
                     },
                     error: function() {
-                        showError('Network error loading Patient');
+                        showError('Network error loading patients');
                     }
                 });
             }
-            // Create user record
-            $('#userForm').submit(function(e) {
+
+            // Create payment record
+            $('#paymentForm').submit(function(e) {
                 e.preventDefault();
                 
                 $.ajax({
                     type: 'POST',
-                    url: 'userOperation.php?action=create_user',
+                    url: 'paymentOperation.php?action=create_payment',
                     data: $(this).serialize(),
                     dataType: "json",
                     success: function(res) {
                         if (res.status === 'success') {
                             showSuccess(res.message, function() {
-                                $('#userModal').modal('hide');
+                                $('#paymentModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -531,43 +483,47 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 });
             });
             
-            // Edit user record
+            // Edit payment record
             $(document).on('click', '.editBtn', function() {
-                const userData = {
+                const paymentData = {
                     id: $(this).data('id'),
-                    username: $(this).data('username'),
-                    role: $(this).data('role'),
-                    status: $(this).data('status')
+                    patient_name: $(this).data('patient_id'),
+                    amount: $(this).data('amount'),
+                    amount_paid: $(this).data('amount_paid'),
+                    payment_date: $(this).data('payment_date')
                 };
                 
-                $('#edit_id').val(userData.id);
-                $('#edit_username').val(userData.username);
-                $('#edit_role').val(userData.role);
-                $('#edit_status').val(userData.status);
+                $('#edit_id').val(paymentData.id);
+                $('#edit_patient_id').val(paymentData.patient_name);
+                $('#edit_amount').val(paymentData.amount);
+                $('#edit_amount_paid').val(paymentData.amount_paid);
+                $('#edit_payment_date').val(paymentData.payment_date);
                 
-                $('#edit_userModal').modal('show');
+                $('#edit_paymentModal').modal('show');
             });
             
-            // Update user record
-            $('#edit_userForm').submit(function(e) {
+            // Update payment record
+            $('#edit_paymentForm').submit(function(e) {
+                loadPatient();
                 e.preventDefault();
                 const submitBtn = $(this).find('[type="submit"]');
                 submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
                 const formData = {
                   edit_id: $('#edit_id').val(),
-                  edit_username: $('#edit_username').val(),
-                  edit_role: $('#edit_role').val(),
-                  edit_status: $('#edit_status').val()
+                  edit_patient_id: $('#edit_patient_id').val(),
+                  edit_amount: $('#edit_amount').val(),
+                  edit_amount_paid: $('#edit_amount_paid').val(),
+                  edit_payment_date: $('#edit_payment_date').val()
                 };
                 $.ajax({
-                    url: 'userOperation.php?action=update_user',
+                    url: 'paymentOperation.php?action=update_payment',
                     method: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',
                     success: function(response) {
                         if(response.status === 'success') {
                             showSuccess(response.message, function() {
-                                $('#edit_userModal').modal('hide');
+                                $('#edit_paymentModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -578,13 +534,13 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         showError('An error occurred: ' + xhr.statusText);
                     },
                     complete: function() {
-                        submitBtn.prop('disabled', false).html('Update user');
+                        submitBtn.prop('disabled', false).html('Update payment');
                     }
                 });
             });
-            // Delete user record
+            // Delete payment record
             $(document).on('click', '.deleteBtn', function() {
-                const user_id = $(this).data('id');
+                const payment_id = $(this).data('id');
                 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -598,8 +554,8 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'POST',
-                            url: 'userOperation.php?action=delete_user',
-                            data: { id: user_id },
+                            url: 'paymentOperation.php?action=delete_payment',
+                            data: { id: payment_id },
                             dataType: 'json',
                             success: function(res) {
                                 if (res.status === 'success') {
@@ -618,10 +574,10 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 });
             });
             
-            // Display user data in table
+            // Display payment data in table
             function displayData() {
                 $.ajax({
-                    url: 'userOperation.php?action=display_user',
+                    url: 'paymentOperation.php?action=display_payment',
                     dataType: 'json',
                     success: function(response) {
                         // Check if response is valid and contains data
@@ -634,21 +590,24 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         response.forEach(row => {
                             tableData += `
                             <tr>
-                                <td>${row.user_id || ''}</td>
-                                <td>${row.username || ''}</td>
-                                <td>${row.role || ''}</td>
+                                <td>${row.payment_id || ''}</td>
+                                <td>${row.patient_name || ''}</td>
+                                <td>${row.amount || ''}</td>
+                                <td>${row.paid_amount || ''}</td>
+                                <td>${row.remainder || ''}</td>
+                                <td>${row.payment_date || ''}</td>
                                 <td>${row.status || ''}</td>
-                                <td>${row.created_at || ''}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm editBtn" 
-                                        data-id="${row.user_id}" 
-                                        data-username="${row.username}"
-                                        data-role="${row.role}"
-                                        data-status="${row.status}">
+                                        data-id="${row.payment_id}" 
+                                        data-patient_id="${row.patient_id}"
+                                        data-amount="${row.amount}"
+                                        data-amount_paid="${row.paid_amount}"
+                                        data-payment_date="${row.payment_date}">
                                         Edit
                                     </button>
                                     <button class="btn btn-danger btn-sm deleteBtn" 
-                                        data-id="${row.user_id}">
+                                        data-id="${row.payment_id}">
                                         Delete
                                     </button>
                                 </td>
@@ -664,7 +623,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         initDataTable();
                     },
                     error: function(xhr, status, error) {
-                        showError('Failed to load user data: ' + error);
+                        showError('Failed to load payment data: ' + error);
                     }
                 });
             }

@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root"; // ama isticmaal magaca user kaaga
 $password = ""; // ama password hadduu jiro
-$dbname = "job"; // magaca database kaaga
+$dbname = "patient"; // magaca database kaaga
 
 $conn = new mysqli($host, $user, $password, $dbname);
 

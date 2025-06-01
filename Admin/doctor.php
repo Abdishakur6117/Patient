@@ -246,17 +246,21 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
         <div class="dashboard-wrapper">
             <div class="dashboard-ecommerce">
                 <div class="container-fluid dashboard-content ">
-                    <h2>User Form</h2>
-                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add User</button>
+                    <h2>Doctor Form</h2>
+                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add Doctor</button>
                     <br>
                     <br>
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <td>ID</td>
-                                <td>Username</td>
-                                <td>Role</td>
-                                <td>Status</td>
+                                <td>Doctor Name</td>
+                                <td>Gender</td>
+                                <td>Date of Birth</td>
+                                <td>Address</td>
+                                <td>Phone</td>
+                                <td>Email</td>
+                                <td>Specialty</td>
                                 <td>Created at</td>
                                 <td>Actions</td>
                             </tr>
@@ -266,71 +270,62 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                     </table>
                 </div>
                 <!--/   INsert Modal start -->
-                <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="doctorModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add New User</h5>
+                                <h5 class="modal-title">Add New Doctor</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="userForm" method="POST" action="">
+                                <form id="doctorForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="text" class="form-control" id="username" name="username">
+                                                <label for="doctor">Doctor Name </label>
+                                                <input type="text" class="form-control" id="doctor_name" name="doctor_name">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="password">Password </label>
-                                                <input type="password" class="form-control" id="password" name="password">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">ConfirmPassword </label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="role" id="role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Doctor">Doctor</option>
-                                                    <option value="Patient">Patient</option>
+                                                <label for="gender">Gender </label>
+                                                <select class="form-control" name="gender" id="gender">
+                                                    <option value="">Select Gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Status </label>
-                                                <select class="form-control" name="status" id="status">
-                                                    <option value="">Select Status</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
-                                                </select>
+                                                <label for="date">Date of Birth </label>
+                                                <input type="date" class="form-control" id="DOB" name="DOB">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Doctor </label>
-                                                <select class="form-control" name="related_doctor_id" id="related_doctor_id">
-                                                    <option value="">Select Doctor</option>
-                                                </select>
+                                                <label for="address">Address </label>
+                                                <input type="text" class="form-control" id="address" name="address">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Patient </label>
-                                                <select class="form-control" name="related_patient_id" id="related_patient_id">
-                                                    <option value="">Select Patient</option>
-                                                </select>
+                                                <label for="phone">Phone </label>
+                                                <input type="number" class="form-control" id="phone" name="phone">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="email">Email </label>
+                                                <input type="email" class="form-control" id="email" name="email">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="specialty">Specialty </label>
+                                                <input type="text" class="form-control" id="specialty" name="specialty">
                                             </div>
                                         </div>
                                     </div>
@@ -345,60 +340,63 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 </div>
                 <!--/   INsert Modal end -->
                 <!-- start Update Model  -->
-                <div class="modal fade" id="edit_userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="edit_doctorModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Update Users</h5>
+                                <h5 class="modal-title">Update Doctor</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="edit_userForm" method="POST" action="">
+                                <form id="edit_doctorForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
+                                                <label for="doctor">Doctor Name </label>
                                                 <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                                <input type="text" class="form-control" id="edit_username" name="edit_username">
+                                                <input type="text" class="form-control" id="edit_doctor_name" name="edit_doctor_name">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="edit_role" id="edit_role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Doctor">Doctor</option>
-                                                    <option value="Patient">Patient</option>
+                                                <label for="gender">Gender </label>
+                                                <select class="form-control" name="edit_gender" id="edit_gender">
+                                                    <option value="">Select Gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Status </label>
-                                                <select class="form-control" name="edit_status" id="edit_status">
-                                                    <option value="">Select Status</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
-                                                </select>
+                                                <label for="date">Date of Birth </label>
+                                                <input type="date" class="form-control" id="edit_DOB" name="edit_DOB">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Doctor </label>
-                                                <select class="form-control" name="edit_related_doctor_id" id="edit_related_doctor_id">
-                                                    <option value="">Select Doctor</option>
-                                                </select>
+                                                <label for="address">Address </label>
+                                                <input type="text" class="form-control" id="edit_address" name="edit_address">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Patient </label>
-                                                <select class="form-control" name="edit_related_patient_id" id="edit_related_patient_id">
-                                                    <option value="">Select Patient</option>
-                                                </select>
+                                                <label for="phone">Phone </label>
+                                                <input type="number" class="form-control" id="edit_phone" name="edit_phone">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="email">Email </label>
+                                                <input type="email" class="form-control" id="edit_email" name="edit_email">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="specialty">Specialty </label>
+                                                <input type="text" class="form-control" id="edit_specialty" name="edit_specialty">
                                             </div>
                                         </div>
                                     </div>
@@ -446,79 +444,26 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
         $(document).ready(function() {
             // Initialize modals and load data
             $('#insertModal').click(function() {
-                $('#userModal').modal('show');
-                $('#userForm')[0].reset();
+                $('#doctorModal').modal('show');
+                $('#doctorForm')[0].reset();
             });
             
             // Initial data loading
             displayData();
-            loadDoctor();
-            loadPatient();
-            // Load doctor for dropdown
-            function loadDoctor() {
-                $.ajax({
-                    url: 'appointmentOperation.php?action=get_doctor',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        if(response.status === 'success' && response.data) {
-                            const $select = $('#related_doctor_id, #edit_related_doctor_id');
-                            $select.empty().append('<option value="">Select Doctor</option>');
-                            
-                            response.data.forEach(doctor => {
-                                $select.append($('<option>', {
-                                    value: doctor.doctor_id,
-                                    text: doctor.doctor_name
-                                }));
-                            });
-                        } else {
-                            showError('Failed to load Doctor');
-                        }
-                    },
-                    error: function() {
-                        showError('Network error loading Doctor');
-                    }
-                });
-            }
-            // Load doctor for dropdown
-            function loadPatient() {
-                $.ajax({
-                    url: 'appointmentOperation.php?action=get_patient',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        if(response.status === 'success' && response.data) {
-                            const $select = $('#related_patient_id, #edit_related_patient_id');
-                            $select.empty().append('<option value="">Select Patient</option>');
-                            
-                            response.data.forEach(patient => {
-                                $select.append($('<option>', {
-                                    value: patient.patient_id,
-                                    text: patient.patient_name
-                                }));
-                            });
-                        } else {
-                            showError('Failed to load Patient');
-                        }
-                    },
-                    error: function() {
-                        showError('Network error loading Patient');
-                    }
-                });
-            }
-            // Create user record
-            $('#userForm').submit(function(e) {
+            
+            // Create doctor record
+            $('#doctorForm').submit(function(e) {
                 e.preventDefault();
                 
                 $.ajax({
                     type: 'POST',
-                    url: 'userOperation.php?action=create_user',
+                    url: 'doctorOperation.php?action=create_doctor',
                     data: $(this).serialize(),
                     dataType: "json",
                     success: function(res) {
                         if (res.status === 'success') {
                             showSuccess(res.message, function() {
-                                $('#userModal').modal('hide');
+                                $('#doctorModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -531,43 +476,55 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 });
             });
             
-            // Edit user record
+            // Edit doctor record
             $(document).on('click', '.editBtn', function() {
-                const userData = {
+                const doctorData = {
                     id: $(this).data('id'),
-                    username: $(this).data('username'),
-                    role: $(this).data('role'),
-                    status: $(this).data('status')
+                    doctor_name: $(this).data('doctor_name'),
+                    gender: $(this).data('gender'),
+                    DOB: $(this).data('dob'),
+                    address: $(this).data('address'),
+                    phone: $(this).data('phone'),
+                    email: $(this).data('email'),
+                    specialty: $(this).data('specialty'),
                 };
                 
-                $('#edit_id').val(userData.id);
-                $('#edit_username').val(userData.username);
-                $('#edit_role').val(userData.role);
-                $('#edit_status').val(userData.status);
+                $('#edit_id').val(doctorData.id);
+                $('#edit_doctor_name').val(doctorData.doctor_name);
+                $('#edit_gender').val(doctorData.gender);
+                $('#edit_DOB').val(doctorData.DOB);
+                $('#edit_address').val(doctorData.address);
+                $('#edit_phone').val(doctorData.phone);
+                $('#edit_email').val(doctorData.email);
+                $('#edit_specialty').val(doctorData.specialty);
                 
-                $('#edit_userModal').modal('show');
+                $('#edit_doctorModal').modal('show');
             });
             
-            // Update user record
-            $('#edit_userForm').submit(function(e) {
+            // Update doctor record
+            $('#edit_doctorForm').submit(function(e) {
                 e.preventDefault();
                 const submitBtn = $(this).find('[type="submit"]');
                 submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
                 const formData = {
                   edit_id: $('#edit_id').val(),
-                  edit_username: $('#edit_username').val(),
-                  edit_role: $('#edit_role').val(),
-                  edit_status: $('#edit_status').val()
+                  edit_doctor_name: $('#edit_doctor_name').val(),
+                  edit_gender: $('#edit_gender').val(),
+                  edit_DOB: $('#edit_DOB').val(),
+                  edit_address: $('#edit_address').val(),
+                  edit_phone: $('#edit_phone').val(),
+                  edit_email: $('#edit_email').val(),
+                  edit_specialty: $('#edit_specialty').val()
                 };
                 $.ajax({
-                    url: 'userOperation.php?action=update_user',
+                    url: 'doctorOperation.php?action=update_doctor',
                     method: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',
                     success: function(response) {
                         if(response.status === 'success') {
                             showSuccess(response.message, function() {
-                                $('#edit_userModal').modal('hide');
+                                $('#edit_doctorModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -578,13 +535,13 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         showError('An error occurred: ' + xhr.statusText);
                     },
                     complete: function() {
-                        submitBtn.prop('disabled', false).html('Update user');
+                        submitBtn.prop('disabled', false).html('Update doctor');
                     }
                 });
             });
-            // Delete user record
+            // Delete doctor record
             $(document).on('click', '.deleteBtn', function() {
-                const user_id = $(this).data('id');
+                const doctor_id = $(this).data('id');
                 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -598,8 +555,8 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'POST',
-                            url: 'userOperation.php?action=delete_user',
-                            data: { id: user_id },
+                            url: 'doctorOperation.php?action=delete_doctor',
+                            data: { id: doctor_id },
                             dataType: 'json',
                             success: function(res) {
                                 if (res.status === 'success') {
@@ -618,10 +575,10 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 });
             });
             
-            // Display user data in table
+            // Display doctor data in table
             function displayData() {
                 $.ajax({
-                    url: 'userOperation.php?action=display_user',
+                    url: 'doctorOperation.php?action=display_doctor',
                     dataType: 'json',
                     success: function(response) {
                         // Check if response is valid and contains data
@@ -634,21 +591,29 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         response.forEach(row => {
                             tableData += `
                             <tr>
-                                <td>${row.user_id || ''}</td>
-                                <td>${row.username || ''}</td>
-                                <td>${row.role || ''}</td>
-                                <td>${row.status || ''}</td>
+                                <td>${row.doctor_id || ''}</td>
+                                <td>${row.doctor_name || ''}</td>
+                                <td>${row.gender || ''}</td>
+                                <td>${row.date_of_birth || ''}</td>
+                                <td>${row.address || ''}</td>
+                                <td>${row.phone || ''}</td>
+                                <td>${row.email || ''}</td>
+                                <td>${row.specialty || ''}</td>
                                 <td>${row.created_at || ''}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm editBtn" 
-                                        data-id="${row.user_id}" 
-                                        data-username="${row.username}"
-                                        data-role="${row.role}"
-                                        data-status="${row.status}">
+                                        data-id="${row.doctor_id}" 
+                                        data-doctor_name="${row.doctor_name}"
+                                        data-gender="${row.gender}"
+                                        data-dob="${row.date_of_birth}"
+                                        data-address="${row.address}"
+                                        data-phone="${row.phone}"
+                                        data-email="${row.email}"
+                                        data-specialty="${row.specialty}">
                                         Edit
                                     </button>
                                     <button class="btn btn-danger btn-sm deleteBtn" 
-                                        data-id="${row.user_id}">
+                                        data-id="${row.doctor_id}">
                                         Delete
                                     </button>
                                 </td>
@@ -664,7 +629,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         initDataTable();
                     },
                     error: function(xhr, status, error) {
-                        showError('Failed to load user data: ' + error);
+                        showError('Failed to load doctor data: ' + error);
                     }
                 });
             }

@@ -2,7 +2,7 @@
 session_start();
 
 // Check if the user is logged in and has the 'Admin' role
-if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
+if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Doctor') {
     // Redirect to login page if not logged in or not an Admin
     header("Location: login.php");
     exit();
@@ -60,7 +60,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
         <!-- ============================================================== -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="../index.php">Patient Management System</a>
+                <a class="navbar-brand" href="../doctor_dashboard.php">Patient Management System</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -104,54 +104,9 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
 
                             <!-- Dashboard -->
                             <li class="nav-item">
-                                <a class="nav-link margin-top-10" href="../index.php">
+                                <a class="nav-link margin-top-10" href="../doctor_dashboard.php">
                                     <i class="fas fa-home"></i> Dashboard
                                 </a>
-                            </li>
-
-                            <!-- Users -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-users"
-                                    aria-expanded="false" aria-controls="submenu-users">
-                                    <i class="fas fa-users"></i> Users
-                                </a>
-                                <div id="submenu-users" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/users.php">List Users</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
-                            <!-- Patient -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-patient"
-                                    aria-expanded="false" aria-controls="submenu-patient">
-                                    <i class="fas fa-user-injured"></i> Patients
-                                </a>
-                                <div id="submenu-patient" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/patient.php">List Patients</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
-                            <!-- Doctor -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-doctor"
-                                    aria-expanded="false" aria-controls="submenu-doctor">
-                                    <i class="fas fa-user-md"></i> Doctors
-                                </a>
-                                <div id="submenu-doctor" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/doctor.php">List Doctors</a>
-                                        </li>
-                                    </ul>
-                                </div>
                             </li>
 
                             <!-- Appointment -->
@@ -163,7 +118,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                                 <div id="submenu-appointment" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/appointment.php">List Appointments</a>
+                                            <a class="nav-link" href="../Doctor/appointment.php">List Appointments</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -178,7 +133,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                                 <div id="submenu-visits" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/visit.php">List Visits</a>
+                                            <a class="nav-link" href="../Doctor/visit.php">List Visits</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -193,22 +148,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                                 <div id="submenu-prescription" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/prescription.php">List Prescriptions</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-
-                            <!-- Payments -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-payments"
-                                    aria-expanded="false" aria-controls="submenu-payments">
-                                    <i class="fas fa-credit-card"></i> Payments
-                                </a>
-                                <div id="submenu-payments" class="collapse submenu">
-                                    <ul class="nav flex-column">
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/payment.php">List Payments</a>
+                                            <a class="nav-link" href="../Doctor/prescription.php">List Prescriptions</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -223,10 +163,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                                 <div id="submenu-reports" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/patientReport.php">Patient Report</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="../Admin/doctorReport.php">Doctor Report</a>
+                                            <a class="nav-link" href="../Doctor/patientReport.php">Patient Report</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -246,18 +183,18 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
         <div class="dashboard-wrapper">
             <div class="dashboard-ecommerce">
                 <div class="container-fluid dashboard-content ">
-                    <h2>User Form</h2>
-                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add User</button>
+                    <h2>prescription Form</h2>
+                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add prescription</button>
                     <br>
                     <br>
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <td>ID</td>
-                                <td>Username</td>
-                                <td>Role</td>
-                                <td>Status</td>
-                                <td>Created at</td>
+                                <td>Patient Name</td>
+                                <td>Medication</td>
+                                <td>Dosage</td>
+                                <td>Duration</td>
                                 <td>Actions</td>
                             </tr>
                         </thead>
@@ -266,71 +203,42 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                     </table>
                 </div>
                 <!--/   INsert Modal start -->
-                <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="prescriptionModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add New User</h5>
+                                <h5 class="modal-title">Add New prescription</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="userForm" method="POST" action="">
+                                <form id="prescriptionForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="text" class="form-control" id="username" name="username">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">Password </label>
-                                                <input type="password" class="form-control" id="password" name="password">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">ConfirmPassword </label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="role" id="role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Doctor">Doctor</option>
-                                                    <option value="Patient">Patient</option>
+                                                <label for="patient">Patient Name </label>
+                                                <select class="form-control" name="visit_id" id="visit_id">
+                                                    <option value="">Select visit</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Status </label>
-                                                <select class="form-control" name="status" id="status">
-                                                    <option value="">Select Status</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
-                                                </select>
+                                                <label for="medication">Medication </label>
+                                                <input type="text" class="form-control" id="medication" name="medication">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Doctor </label>
-                                                <select class="form-control" name="related_doctor_id" id="related_doctor_id">
-                                                    <option value="">Select Doctor</option>
-                                                </select>
+                                                <label for="dosage">Dosage </label>
+                                                <input type="text" class="form-control" id="dosage" name="dosage">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Patient </label>
-                                                <select class="form-control" name="related_patient_id" id="related_patient_id">
-                                                    <option value="">Select Patient</option>
-                                                </select>
+                                                <label for="duration">Duration </label>
+                                                <input type="text" class="form-control" id="duration" name="duration">
                                             </div>
                                         </div>
                                     </div>
@@ -345,60 +253,43 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 </div>
                 <!--/   INsert Modal end -->
                 <!-- start Update Model  -->
-                <div class="modal fade" id="edit_userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="edit_prescriptionModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Update Users</h5>
+                                <h5 class="modal-title">Update prescription</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="edit_userForm" method="POST" action="">
+                                <form id="edit_prescriptionForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
+                                                <label for="patient">Patient Name </label>
                                                 <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                                <input type="text" class="form-control" id="edit_username" name="edit_username">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="edit_role" id="edit_role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Doctor">Doctor</option>
-                                                    <option value="Patient">Patient</option>
+                                                <select class="form-control" name="edit_visit_id" id="edit_visit_id">
+                                                    <option value="">Select visit</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Status </label>
-                                                <select class="form-control" name="edit_status" id="edit_status">
-                                                    <option value="">Select Status</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
-                                                </select>
+                                                <label for="medication">Medication </label>
+                                                <input type="text" class="form-control" id="edit_medication" name="edit_medication">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Doctor </label>
-                                                <select class="form-control" name="edit_related_doctor_id" id="edit_related_doctor_id">
-                                                    <option value="">Select Doctor</option>
-                                                </select>
+                                                <label for="dosage">Dosage </label>
+                                                <input type="text" class="form-control" id="edit_dosage" name="edit_dosage">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Patient </label>
-                                                <select class="form-control" name="edit_related_patient_id" id="edit_related_patient_id">
-                                                    <option value="">Select Patient</option>
-                                                </select>
+                                                <label for="duration">Duration </label>
+                                                <input type="text" class="form-control" id="edit_duration" name="edit_duration">
                                             </div>
                                         </div>
                                     </div>
@@ -446,54 +337,27 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
         $(document).ready(function() {
             // Initialize modals and load data
             $('#insertModal').click(function() {
-                $('#userModal').modal('show');
-                $('#userForm')[0].reset();
+                $('#prescriptionModal').modal('show');
+                $('#prescriptionForm')[0].reset();
             });
             
             // Initial data loading
             displayData();
-            loadDoctor();
             loadPatient();
-            // Load doctor for dropdown
-            function loadDoctor() {
-                $.ajax({
-                    url: 'appointmentOperation.php?action=get_doctor',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        if(response.status === 'success' && response.data) {
-                            const $select = $('#related_doctor_id, #edit_related_doctor_id');
-                            $select.empty().append('<option value="">Select Doctor</option>');
-                            
-                            response.data.forEach(doctor => {
-                                $select.append($('<option>', {
-                                    value: doctor.doctor_id,
-                                    text: doctor.doctor_name
-                                }));
-                            });
-                        } else {
-                            showError('Failed to load Doctor');
-                        }
-                    },
-                    error: function() {
-                        showError('Network error loading Doctor');
-                    }
-                });
-            }
-            // Load doctor for dropdown
+            // Load patient for dropdown
             function loadPatient() {
                 $.ajax({
-                    url: 'appointmentOperation.php?action=get_patient',
+                    url: 'prescriptionOperation.php?action=get_patient',
                     method: 'GET',
                     dataType: 'json',
                     success: function(response) {
                         if(response.status === 'success' && response.data) {
-                            const $select = $('#related_patient_id, #edit_related_patient_id');
-                            $select.empty().append('<option value="">Select Patient</option>');
+                            const $select = $('#visit_id, #edit_visit_id');
+                            $select.empty().append('<option value="">Select Patent</option>');
                             
                             response.data.forEach(patient => {
                                 $select.append($('<option>', {
-                                    value: patient.patient_id,
+                                    value: patient.visit_id,
                                     text: patient.patient_name
                                 }));
                             });
@@ -506,19 +370,19 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                     }
                 });
             }
-            // Create user record
-            $('#userForm').submit(function(e) {
+            // Create prescription record
+            $('#prescriptionForm').submit(function(e) {
                 e.preventDefault();
                 
                 $.ajax({
                     type: 'POST',
-                    url: 'userOperation.php?action=create_user',
+                    url: 'prescriptionOperation.php?action=create_prescription',
                     data: $(this).serialize(),
                     dataType: "json",
                     success: function(res) {
                         if (res.status === 'success') {
                             showSuccess(res.message, function() {
-                                $('#userModal').modal('hide');
+                                $('#prescriptionModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -531,43 +395,46 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 });
             });
             
-            // Edit user record
+            // Edit prescription record
             $(document).on('click', '.editBtn', function() {
-                const userData = {
+                const prescriptionData = {
                     id: $(this).data('id'),
-                    username: $(this).data('username'),
-                    role: $(this).data('role'),
-                    status: $(this).data('status')
+                    patient_name: $(this).data('visit_id'),
+                    medication: $(this).data('medication'),
+                    dosage: $(this).data('dosage'),
+                    duration: $(this).data('duration')
                 };
                 
-                $('#edit_id').val(userData.id);
-                $('#edit_username').val(userData.username);
-                $('#edit_role').val(userData.role);
-                $('#edit_status').val(userData.status);
+                $('#edit_id').val(prescriptionData.id);
+                $('#edit_visit_id').val(prescriptionData.patient_name);
+                $('#edit_medication').val(prescriptionData.medication);
+                $('#edit_dosage').val(prescriptionData.dosage);
+                $('#edit_duration').val(prescriptionData.duration);
                 
-                $('#edit_userModal').modal('show');
+                $('#edit_prescriptionModal').modal('show');
             });
             
-            // Update user record
-            $('#edit_userForm').submit(function(e) {
+            // Update prescription record
+            $('#edit_prescriptionForm').submit(function(e) {
                 e.preventDefault();
                 const submitBtn = $(this).find('[type="submit"]');
                 submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
                 const formData = {
                   edit_id: $('#edit_id').val(),
-                  edit_username: $('#edit_username').val(),
-                  edit_role: $('#edit_role').val(),
-                  edit_status: $('#edit_status').val()
+                  edit_visit_id: $('#edit_visit_id').val(),
+                  edit_medication: $('#edit_medication').val(),
+                  edit_dosage: $('#edit_dosage').val(),
+                  edit_duration: $('#edit_duration').val()
                 };
                 $.ajax({
-                    url: 'userOperation.php?action=update_user',
+                    url: 'prescriptionOperation.php?action=update_prescription',
                     method: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',
                     success: function(response) {
                         if(response.status === 'success') {
                             showSuccess(response.message, function() {
-                                $('#edit_userModal').modal('hide');
+                                $('#edit_prescriptionModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -578,13 +445,13 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         showError('An error occurred: ' + xhr.statusText);
                     },
                     complete: function() {
-                        submitBtn.prop('disabled', false).html('Update user');
+                        submitBtn.prop('disabled', false).html('Update prescription');
                     }
                 });
             });
-            // Delete user record
+            // Delete prescription record
             $(document).on('click', '.deleteBtn', function() {
-                const user_id = $(this).data('id');
+                const prescription_id = $(this).data('id');
                 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -598,8 +465,8 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'POST',
-                            url: 'userOperation.php?action=delete_user',
-                            data: { id: user_id },
+                            url: 'prescriptionOperation.php?action=delete_prescription',
+                            data: { id: prescription_id },
                             dataType: 'json',
                             success: function(res) {
                                 if (res.status === 'success') {
@@ -618,57 +485,56 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 });
             });
             
-            // Display user data in table
+            // Display prescription data in table
             function displayData() {
                 $.ajax({
-                    url: 'userOperation.php?action=display_user',
+                    url: 'prescriptionOperation.php?action=display_prescription',
                     dataType: 'json',
                     success: function(response) {
-                        // Check if response is valid and contains data
-                        if (!response || !Array.isArray(response)) {
+                        if (!response || response.status !== 'success' || !Array.isArray(response.data)) {
                             showError('Invalid data received from server');
                             return;
                         }
-                        
+
                         let tableData = '';
-                        response.forEach(row => {
+                        response.data.forEach(row => {
                             tableData += `
                             <tr>
-                                <td>${row.user_id || ''}</td>
-                                <td>${row.username || ''}</td>
-                                <td>${row.role || ''}</td>
-                                <td>${row.status || ''}</td>
-                                <td>${row.created_at || ''}</td>
+                                <td>${row.prescription_id || ''}</td>
+                                <td>${row.patient_name || ''}</td>
+                                <td>${row.medication || ''}</td>
+                                <td>${row.dosage || ''}</td>
+                                <td>${row.duration || ''}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm editBtn" 
-                                        data-id="${row.user_id}" 
-                                        data-username="${row.username}"
-                                        data-role="${row.role}"
-                                        data-status="${row.status}">
+                                        data-id="${row.prescription_id}" 
+                                        data-visit_id="${row.visit_id}"
+                                        data-medication="${row.medication}"
+                                        data-dosage="${row.dosage}"
+                                        data-duration="${row.duration}">
                                         Edit
                                     </button>
                                     <button class="btn btn-danger btn-sm deleteBtn" 
-                                        data-id="${row.user_id}">
+                                        data-id="${row.prescription_id}">
                                         Delete
                                     </button>
                                 </td>
                             </tr>`;
                         });
-                        
-                        // Check if DataTable exists before destroying
+
                         if ($.fn.DataTable && $.fn.DataTable.isDataTable('#dataTable')) {
                             $('#dataTable').DataTable().destroy();
                         }
-                        
+
                         $('#dataTable tbody').html(tableData);
                         initDataTable();
                     },
                     error: function(xhr, status, error) {
-                        showError('Failed to load user data: ' + error);
+                        showError('Failed to load prescription data: ' + error);
                     }
                 });
             }
-            
+
             // Initialize DataTable
             function initDataTable() {
                 $('#dataTable').DataTable({

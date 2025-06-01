@@ -2,24 +2,27 @@
 session_start();
 require_once 'Connection/db_connect.php';
 // Check if the user is logged in and has the 'Admin' role
-if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
+if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
     // Redirect to login page if not logged in or not an Admin
     header("Location: login.php");
     exit();
 }
 
 // Tirada wax kasta
-$totalUsers = $conn->query("SELECT COUNT(*) FROM users")->fetch_row()[0];
-$totalCompanies = $conn->query("SELECT COUNT(*) FROM companies")->fetch_row()[0];
-$totalJobs = $conn->query("SELECT COUNT(*) FROM jobs")->fetch_row()[0];
-$totalUser_profiles = $conn->query("SELECT COUNT(*) FROM user_profiles")->fetch_row()[0];
-$totalApplications = $conn->query("SELECT COUNT(*) FROM applications")->fetch_row()[0];
+// Tirada walxaha kala duwan
+$totalUsers = $conn->query("SELECT COUNT(*) as count FROM users")->fetch_assoc()['count'];
+$totalPatients = $conn->query("SELECT COUNT(*) as count FROM patients")->fetch_assoc()['count'];
+$totalDoctors = $conn->query("SELECT COUNT(*) as count FROM doctors")->fetch_assoc()['count'];
+$totalAppointments = $conn->query("SELECT COUNT(*) as count FROM appointments")->fetch_assoc()['count'];
+$totalVisits = $conn->query("SELECT COUNT(*) as count FROM visits")->fetch_assoc()['count'];
+$totalPrescriptions = $conn->query("SELECT COUNT(*) as count FROM prescriptions")->fetch_assoc()['count'];
+$totalPayments = $conn->query("SELECT COUNT(*) as count FROM payments")->fetch_assoc()['count'];
 ?>
 
 <!doctype html>
 <html lang="en">
  
-<>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -33,7 +36,7 @@ $totalApplications = $conn->query("SELECT COUNT(*) FROM applications")->fetch_ro
     <link rel="stylesheet" href="assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="assets/vendor/charts/c3charts/c3.css">
     <link rel="stylesheet" href="assets/vendor/fonts/flag-icon-css/flag-icon.min.css">
-    <title>Job Portal Management System</title>
+    <title>Patient Management System</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
@@ -69,7 +72,7 @@ $totalApplications = $conn->query("SELECT COUNT(*) FROM applications")->fetch_ro
         <!-- ============================================================== -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="index.php">Job Portal Management System</a>
+                <a class="navbar-brand" href="index.php">Patient Management System</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -122,7 +125,7 @@ $totalApplications = $conn->query("SELECT COUNT(*) FROM applications")->fetch_ro
                             <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-users"
                                     aria-expanded="false" aria-controls="submenu-users">
-                                    <i class="fas fa-user-friends"></i> Users
+                                    <i class="fas fa-users"></i> Users
                                 </a>
                                 <div id="submenu-users" class="collapse submenu">
                                     <ul class="nav flex-column">
@@ -133,61 +136,91 @@ $totalApplications = $conn->query("SELECT COUNT(*) FROM applications")->fetch_ro
                                 </div>
                             </li>
 
-                            <!-- Companies -->
+                            <!-- Patient -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-companies"
-                                    aria-expanded="false" aria-controls="submenu-companies">
-                                    <i class="fas fa-building"></i> Companies
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-patient"
+                                    aria-expanded="false" aria-controls="submenu-patient">
+                                    <i class="fas fa-user-injured"></i> Patients
                                 </a>
-                                <div id="submenu-companies" class="collapse submenu">
+                                <div id="submenu-patient" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/company.php">List Companies</a>
+                                            <a class="nav-link" href="Admin/patient.php">List Patients</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Jobs -->
+                            <!-- Doctor -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-jobs"
-                                    aria-expanded="false" aria-controls="submenu-jobs">
-                                    <i class="fas fa-briefcase"></i> Jobs
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-doctor"
+                                    aria-expanded="false" aria-controls="submenu-doctor">
+                                    <i class="fas fa-user-md"></i> Doctors
                                 </a>
-                                <div id="submenu-jobs" class="collapse submenu">
+                                <div id="submenu-doctor" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/job.php">List Jobs</a>
+                                            <a class="nav-link" href="Admin/doctor.php">List Doctors</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- User Profiles -->
+                            <!-- Appointment -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-profiles"
-                                    aria-expanded="false" aria-controls="submenu-profiles">
-                                    <i class="fas fa-id-badge"></i> User Profiles
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-appointment"
+                                    aria-expanded="false" aria-controls="submenu-appointment">
+                                    <i class="fas fa-calendar-check"></i> Appointments
                                 </a>
-                                <div id="submenu-profiles" class="collapse submenu">
+                                <div id="submenu-appointment" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/userProfile.php">List Profiles</a>
+                                            <a class="nav-link" href="Admin/appointment.php">List Appointments</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
 
-                            <!-- Applications -->
+                            <!-- Visits -->
                             <li class="nav-item">
-                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-applications"
-                                    aria-expanded="false" aria-controls="submenu-applications">
-                                    <i class="fas fa-file-alt"></i> Applications
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-visits"
+                                    aria-expanded="false" aria-controls="submenu-visits">
+                                    <i class="fas fa-notes-medical"></i> Visits
                                 </a>
-                                <div id="submenu-applications" class="collapse submenu">
+                                <div id="submenu-visits" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/application.php">List Applications</a>
+                                            <a class="nav-link" href="Admin/visit.php">List Visits</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <!-- Prescription -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-prescription"
+                                    aria-expanded="false" aria-controls="submenu-prescription">
+                                    <i class="fas fa-file-prescription"></i> Prescriptions
+                                </a>
+                                <div id="submenu-prescription" class="collapse submenu">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="Admin/prescription.php">List Prescriptions</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <!-- Payments -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-toggle="collapse" data-target="#submenu-payments"
+                                    aria-expanded="false" aria-controls="submenu-payments">
+                                    <i class="fas fa-credit-card"></i> Payments
+                                </a>
+                                <div id="submenu-payments" class="collapse submenu">
+                                    <ul class="nav flex-column">
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="Admin/payment.php">List Payments</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -202,10 +235,10 @@ $totalApplications = $conn->query("SELECT COUNT(*) FROM applications")->fetch_ro
                                 <div id="submenu-reports" class="collapse submenu">
                                     <ul class="nav flex-column">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/companyReport.php">Company Report</a>
+                                            <a class="nav-link" href="Admin/patientReport.php">Patient Report</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Admin/jobSeekerReport.php">Job Seeker Report</a>
+                                            <a class="nav-link" href="Admin/doctorReport.php">Doctor Report</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -216,7 +249,6 @@ $totalApplications = $conn->query("SELECT COUNT(*) FROM applications")->fetch_ro
                 </nav>
             </div>
         </div>
-
         <!-- ============================================================== -->
         <!-- end left sidebar -->
         <!-- ============================================================== -->
@@ -241,75 +273,102 @@ $totalApplications = $conn->query("SELECT COUNT(*) FROM applications")->fetch_ro
                     <!-- ============================================================== -->
 
                     <div class="container mt-5">
-                        <div class="row">
+                        <div class="row g-4">
 
                             <!-- Users -->
-                            <div class="col-md-3 mb-4">
-                                <div class="card text-white bg-primary">
+                            <div class="col-md-3">
+                                <div class="card text-white bg-primary h-100">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
                                             <h5 class="card-title">Users</h5>
                                             <h3><?php echo $totalUsers; ?></h3>
                                         </div>
-                                        <i class="fas fa-user-friends fa-2x"></i>
+                                        <i class="fas fa-users fa-3x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Companies -->
-                            <div class="col-md-3 mb-4">
-                                <div class="card text-white bg-success">
+                            <!-- Patients -->
+                            <div class="col-md-3">
+                                <div class="card text-white bg-success h-100">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Companies</h5>
-                                            <h3><?php echo $totalCompanies; ?></h3>
+                                            <h5 class="card-title">Patients</h5>
+                                            <h3><?php echo $totalPatients; ?></h3>
                                         </div>
-                                        <i class="fas fa-building fa-2x"></i>
+                                        <i class="fas fa-user-injured fa-3x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Jobs -->
-                            <div class="col-md-3 mb-4">
-                                <div class="card text-white bg-info">
+                            <!-- Doctors -->
+                            <div class="col-md-3">
+                                <div class="card text-white bg-info h-100">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Jobs</h5>
-                                            <h3><?php echo $totalJobs; ?></h3>
+                                            <h5 class="card-title">Doctors</h5>
+                                            <h3><?php echo $totalDoctors; ?></h3>
                                         </div>
-                                        <i class="fas fa-briefcase fa-2x"></i>
+                                        <i class="fas fa-user-md fa-3x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- User Profiles -->
-                            <div class="col-md-3 mb-4">
-                                <div class="card text-white bg-warning">
+                            <!-- Appointments -->
+                            <div class="col-md-3">
+                                <div class="card text-white bg-warning h-100">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">User Profiles</h5>
-                                            <h3><?php echo $totalUser_profiles; ?></h3>
+                                            <h5 class="card-title">Appointments</h5>
+                                            <h3><?php echo $totalAppointments; ?></h3>
                                         </div>
-                                        <i class="fas fa-id-badge fa-2x"></i>
+                                        <i class="fas fa-calendar-check fa-3x"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Applications -->
-                            <div class="col-md-3 mb-4">
-                                <div class="card text-white bg-danger">
+                            <!-- Visits -->
+                            <div class="col-md-3">
+                                <div class="card text-white bg-danger h-100 mt-4">
                                     <div class="card-body d-flex justify-content-between align-items-center">
                                         <div>
-                                            <h5 class="card-title">Applications</h5>
-                                            <h3><?php echo $totalApplications; ?></h3>
+                                            <h5 class="card-title">Visits</h5>
+                                            <h3><?php echo $totalVisits; ?></h3>
                                         </div>
-                                        <i class="fas fa-file-alt fa-2x"></i>
+                                        <i class="fas fa-notes-medical fa-3x"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Prescriptions -->
+                            <div class="col-md-3">
+                                <div class="card text-white bg-secondary h-100 mt-4">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Prescriptions</h5>
+                                            <h3><?php echo $totalPrescriptions; ?></h3>
+                                        </div>
+                                        <i class="fas fa-file-prescription fa-3x"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payments -->
+                            <div class="col-md-3">
+                                <div class="card text-white bg-dark h-100 mt-4">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h5 class="card-title">Payments</h5>
+                                            <h3><?php echo $totalPayments; ?></h3>
+                                        </div>
+                                        <i class="fas fa-credit-card fa-3x"></i>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </div>
+
 
 
                 </div>

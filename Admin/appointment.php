@@ -246,18 +246,19 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
         <div class="dashboard-wrapper">
             <div class="dashboard-ecommerce">
                 <div class="container-fluid dashboard-content ">
-                    <h2>User Form</h2>
-                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add User</button>
+                    <h2>Appointment Form</h2>
+                    <button type="button" class="btn btn-primary at-3" id="insertModal">Add Appointment</button>
                     <br>
                     <br>
                     <table id="dataTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <td>ID</td>
-                                <td>Username</td>
-                                <td>Role</td>
+                                <td>Patient Name</td>
+                                <td>Doctor Name</td>
+                                <td>Appointment Date</td>
+                                <td>Reason</td>
                                 <td>Status</td>
-                                <td>Created at</td>
                                 <td>Actions</td>
                             </tr>
                         </thead>
@@ -266,70 +267,54 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                     </table>
                 </div>
                 <!--/   INsert Modal start -->
-                <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="appointmentModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add New User</h5>
+                                <h5 class="modal-title">Add New Appointment</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="userForm" method="POST" action="">
+                                <form id="appointmentForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
-                                                <input type="text" class="form-control" id="username" name="username">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">Password </label>
-                                                <input type="password" class="form-control" id="password" name="password">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="password">ConfirmPassword </label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="role" id="role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Doctor">Doctor</option>
-                                                    <option value="Patient">Patient</option>
+                                                <label for="patient">Patient Name </label>
+                                                <select class="form-control" name="patient_id" id="patient_id">
+                                                    <option value="">Select Patient</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Status </label>
-                                                <select class="form-control" name="status" id="status">
-                                                    <option value="">Select Status</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Doctor </label>
-                                                <select class="form-control" name="related_doctor_id" id="related_doctor_id">
+                                                <label for="doctor">Doctor Name </label>
+                                                <select class="form-control" name="doctor_id" id="doctor_id">
                                                     <option value="">Select Doctor</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Patient </label>
-                                                <select class="form-control" name="related_patient_id" id="related_patient_id">
-                                                    <option value="">Select Patient</option>
+                                                <label for="date">Appointment Date </label>
+                                                <input type="datetime-local" class="form-control" id="appointment_date" name="appointment_date">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="reason">Reason </label>
+                                                <input type="text" class="form-control" id="reason" name="reason">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="status">Status </label>
+                                                <select class="form-control" name="status" id="status">
+                                                    <option value="">Select Status</option>
+                                                    <option value="Scheduled">Scheduled</option>
+                                                    <option value="Completed">Completed</option>
+                                                    <option value="Cancelled">Cancelled</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -345,59 +330,55 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 </div>
                 <!--/   INsert Modal end -->
                 <!-- start Update Model  -->
-                <div class="modal fade" id="edit_userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade" id="edit_appointmentModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Update Users</h5>
+                                <h5 class="modal-title">Update Appointment</h5>
                                 <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="edit_userForm" method="POST" action="">
+                                <form id="edit_appointmentForm" method="POST" action="">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="username">UserName </label>
+                                                <label for="patient">Patient Name </label>
                                                 <input type="hidden" class="form-control" id="edit_id" name="edit_id">
-                                                <input type="text" class="form-control" id="edit_username" name="edit_username">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Role </label>
-                                                <select class="form-control" name="edit_role" id="edit_role">
-                                                    <option value="">Select Role</option>
-                                                    <option value="Admin">Admin</option>
-                                                    <option value="Doctor">Doctor</option>
-                                                    <option value="Patient">Patient</option>
+                                                <select class="form-control" name="edit_patient_id" id="edit_patient_id">
+                                                    <option value="">Select Patient</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Status </label>
-                                                <select class="form-control" name="edit_status" id="edit_status">
-                                                    <option value="">Select Status</option>
-                                                    <option value="Active">Active</option>
-                                                    <option value="Inactive">Inactive</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="role">Doctor </label>
-                                                <select class="form-control" name="edit_related_doctor_id" id="edit_related_doctor_id">
+                                                <label for="doctor">Doctor Name </label>
+                                                <select class="form-control" name="edit_doctor_id" id="edit_doctor_id">
                                                     <option value="">Select Doctor</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="role">Patient </label>
-                                                <select class="form-control" name="edit_related_patient_id" id="edit_related_patient_id">
-                                                    <option value="">Select Patient</option>
+                                                <label for="date">Appointment Date </label>
+                                                <input type="datetime-local" class="form-control" id="edit_appointment_date" name="edit_appointment_date">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="reason">Reason </label>
+                                                <input type="text" class="form-control" id="edit_reason" name="edit_reason">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="status">Status </label>
+                                                <select class="form-control" name="edit_status" id="edit_status">
+                                                    <option value="">Select Status</option>
+                                                    <option value="Scheduled">Scheduled</option>
+                                                    <option value="Completed">Completed</option>
+                                                    <option value="Cancelled">Cancelled</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -446,14 +427,40 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
         $(document).ready(function() {
             // Initialize modals and load data
             $('#insertModal').click(function() {
-                $('#userModal').modal('show');
-                $('#userForm')[0].reset();
+                $('#appointmentModal').modal('show');
+                $('#appointmentForm')[0].reset();
             });
             
             // Initial data loading
             displayData();
-            loadDoctor();
             loadPatient();
+            loadDoctor();
+            // Load patient for dropdown
+            function loadPatient() {
+                $.ajax({
+                    url: 'appointmentOperation.php?action=get_patient',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if(response.status === 'success' && response.data) {
+                            const $select = $('#patient_id, #edit_patient_id');
+                            $select.empty().append('<option value="">Select Patent</option>');
+                            
+                            response.data.forEach(patient => {
+                                $select.append($('<option>', {
+                                    value: patient.patient_id,
+                                    text: patient.patient_name
+                                }));
+                            });
+                        } else {
+                            showError('Failed to load Patient');
+                        }
+                    },
+                    error: function() {
+                        showError('Network error loading Patient');
+                    }
+                });
+            }
             // Load doctor for dropdown
             function loadDoctor() {
                 $.ajax({
@@ -462,7 +469,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                     dataType: 'json',
                     success: function(response) {
                         if(response.status === 'success' && response.data) {
-                            const $select = $('#related_doctor_id, #edit_related_doctor_id');
+                            const $select = $('#doctor_id, #edit_doctor_id');
                             $select.empty().append('<option value="">Select Doctor</option>');
                             
                             response.data.forEach(doctor => {
@@ -480,45 +487,19 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                     }
                 });
             }
-            // Load doctor for dropdown
-            function loadPatient() {
-                $.ajax({
-                    url: 'appointmentOperation.php?action=get_patient',
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        if(response.status === 'success' && response.data) {
-                            const $select = $('#related_patient_id, #edit_related_patient_id');
-                            $select.empty().append('<option value="">Select Patient</option>');
-                            
-                            response.data.forEach(patient => {
-                                $select.append($('<option>', {
-                                    value: patient.patient_id,
-                                    text: patient.patient_name
-                                }));
-                            });
-                        } else {
-                            showError('Failed to load Patient');
-                        }
-                    },
-                    error: function() {
-                        showError('Network error loading Patient');
-                    }
-                });
-            }
-            // Create user record
-            $('#userForm').submit(function(e) {
+            // Create appointment record
+            $('#appointmentForm').submit(function(e) {
                 e.preventDefault();
                 
                 $.ajax({
                     type: 'POST',
-                    url: 'userOperation.php?action=create_user',
+                    url: 'appointmentOperation.php?action=create_appointment',
                     data: $(this).serialize(),
                     dataType: "json",
                     success: function(res) {
                         if (res.status === 'success') {
                             showSuccess(res.message, function() {
-                                $('#userModal').modal('hide');
+                                $('#appointmentModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -531,43 +512,49 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 });
             });
             
-            // Edit user record
+            // Edit appointment record
             $(document).on('click', '.editBtn', function() {
-                const userData = {
+                const appointmentData = {
                     id: $(this).data('id'),
-                    username: $(this).data('username'),
-                    role: $(this).data('role'),
-                    status: $(this).data('status')
+                    patient_name: $(this).data('patient_id'),
+                    doctor_name: $(this).data('doctor_id'),
+                    appointment_date: $(this).data('appointment_date'),
+                    reason: $(this).data('reason'),
+                    status: $(this).data('status'),
                 };
                 
-                $('#edit_id').val(userData.id);
-                $('#edit_username').val(userData.username);
-                $('#edit_role').val(userData.role);
-                $('#edit_status').val(userData.status);
+                $('#edit_id').val(appointmentData.id);
+                $('#edit_patient_id').val(appointmentData.patient_name);
+                $('#edit_doctor_id').val(appointmentData.doctor_name);
+                $('#edit_appointment_date').val(appointmentData.appointment_date);
+                $('#edit_reason').val(appointmentData.reason);
+                $('#edit_status').val(appointmentData.status);
                 
-                $('#edit_userModal').modal('show');
+                $('#edit_appointmentModal').modal('show');
             });
             
-            // Update user record
-            $('#edit_userForm').submit(function(e) {
+            // Update appointment record
+            $('#edit_appointmentForm').submit(function(e) {
                 e.preventDefault();
                 const submitBtn = $(this).find('[type="submit"]');
                 submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
                 const formData = {
                   edit_id: $('#edit_id').val(),
-                  edit_username: $('#edit_username').val(),
-                  edit_role: $('#edit_role').val(),
+                  edit_patient_id: $('#edit_patient_id').val(),
+                  edit_doctor_id: $('#edit_doctor_id').val(),
+                  edit_appointment_date: $('#edit_appointment_date').val(),
+                  edit_reason: $('#edit_reason').val(),
                   edit_status: $('#edit_status').val()
                 };
                 $.ajax({
-                    url: 'userOperation.php?action=update_user',
+                    url: 'appointmentOperation.php?action=update_appointment',
                     method: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',
                     success: function(response) {
                         if(response.status === 'success') {
                             showSuccess(response.message, function() {
-                                $('#edit_userModal').modal('hide');
+                                $('#edit_appointmentModal').modal('hide');
                                 displayData();
                             });
                         } else {
@@ -578,13 +565,13 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         showError('An error occurred: ' + xhr.statusText);
                     },
                     complete: function() {
-                        submitBtn.prop('disabled', false).html('Update user');
+                        submitBtn.prop('disabled', false).html('Update appointment');
                     }
                 });
             });
-            // Delete user record
+            // Delete appointment record
             $(document).on('click', '.deleteBtn', function() {
-                const user_id = $(this).data('id');
+                const appointment_id = $(this).data('id');
                 
                 Swal.fire({
                     title: 'Are you sure?',
@@ -598,8 +585,8 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'POST',
-                            url: 'userOperation.php?action=delete_user',
-                            data: { id: user_id },
+                            url: 'appointmentOperation.php?action=delete_appointment',
+                            data: { id: appointment_id },
                             dataType: 'json',
                             success: function(res) {
                                 if (res.status === 'success') {
@@ -618,10 +605,10 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                 });
             });
             
-            // Display user data in table
+            // Display appointment data in table
             function displayData() {
                 $.ajax({
-                    url: 'userOperation.php?action=display_user',
+                    url: 'appointmentOperation.php?action=display_appointment',
                     dataType: 'json',
                     success: function(response) {
                         // Check if response is valid and contains data
@@ -634,21 +621,24 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         response.forEach(row => {
                             tableData += `
                             <tr>
-                                <td>${row.user_id || ''}</td>
-                                <td>${row.username || ''}</td>
-                                <td>${row.role || ''}</td>
+                                <td>${row.appointment_id || ''}</td>
+                                <td>${row.patient_name || ''}</td>
+                                <td>${row.doctor_name || ''}</td>
+                                <td>${row.appointment_date || ''}</td>
+                                <td>${row.reason || ''}</td>
                                 <td>${row.status || ''}</td>
-                                <td>${row.created_at || ''}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm editBtn" 
-                                        data-id="${row.user_id}" 
-                                        data-username="${row.username}"
-                                        data-role="${row.role}"
+                                        data-id="${row.appointment_id}" 
+                                        data-patient_id="${row.patient_id}"
+                                        data-doctor_id="${row.doctor_id}"
+                                        data-appointment_date="${row.appointment_date}"
+                                        data-reason="${row.reason}"
                                         data-status="${row.status}">
                                         Edit
                                     </button>
                                     <button class="btn btn-danger btn-sm deleteBtn" 
-                                        data-id="${row.user_id}">
+                                        data-id="${row.appointment_id}">
                                         Delete
                                     </button>
                                 </td>
@@ -664,7 +654,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] != 'Admin') {
                         initDataTable();
                     },
                     error: function(xhr, status, error) {
-                        showError('Failed to load user data: ' + error);
+                        showError('Failed to load appointment data: ' + error);
                     }
                 });
             }

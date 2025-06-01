@@ -7,11 +7,11 @@ function login() {
     $db = new DatabaseConnection();
     $conn = $db->getConnection();
 
-    $email = $_POST['email'] ?? '';
+    $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    if (!$email) {
-        echo json_encode(["status" => "error", "message" => 'Email is required']);
+    if (!$username) {
+        echo json_encode(["status" => "error", "message" => 'Username is required']);
         return;
     }
     if (!$password) {
@@ -19,29 +19,38 @@ function login() {
         return;
     }
 
-    // ---------- 1. Check in users table (username only) ----------
-    $queryUser = 'SELECT * FROM users WHERE email = :email';
+    // 1. Fetch user by username
+    $queryUser = 'SELECT * FROM users WHERE username = :username';
     $stmUser = $conn->prepare($queryUser);
-    $stmUser->execute(['email' => $email]);
+    $stmUser->execute(['username' => $username]);
     $userData = $stmUser->fetch(PDO::FETCH_ASSOC);
 
-    if ($userData) {
-        if ($password == $userData['password']) {
-            session_start();
-            $_SESSION['user'] = $userData['email'];
-            $_SESSION['user_id'] = $userData['user_id'];
-            $_SESSION['role'] = $userData['role'];
+    if (!$userData) {
+        echo json_encode(["status" => "error", "message" => 'User not found']);
+        return;
+    }
 
-            echo json_encode([
-                "status" => "success",
-                "message" => 'User logged in successfully',
-                "role" => $userData['role']
-            ]);
-            return;
-        } else {
-            echo json_encode(["status" => "error", "message" => 'Incorrect password']);
-            return;
+    // 2. Compare plain text passwords directly (Not secure!)
+    if ($password === $userData['password']) {
+        session_start();
+        $_SESSION['user'] = $userData['username'];
+        $_SESSION['user_id'] = $userData['user_id'];
+        $_SESSION['role'] = $userData['role'];
+        
+        // Optionally save patient_id or doctor_id if needed
+        if ($userData['role'] === 'Patient') {
+            $_SESSION['patient_id'] = $userData['related_patient_id'] ?? null;
+        } elseif ($userData['role'] === 'Doctor') {
+            $_SESSION['doctor_id'] = $userData['related_doctor_id'] ?? null;
         }
+
+        echo json_encode([
+            "status" => "success",
+            "message" => 'User logged in successfully',
+            "role" => $userData['role']
+        ]);
+    } else {
+        echo json_encode(["status" => "error", "message" => 'Incorrect password']);
     }
 }
 ?>

@@ -15,7 +15,7 @@
 
     <style>
     body {
-      background-image: url('https://www.webmediatricks.com/uploaded_files/product/1703848338.jpg');
+      background-image: url('https://www.sermo.com/wp-content/uploads/2022/05/doctor-patient-img-1-copy-2-1.png.webp');
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
@@ -35,8 +35,8 @@
         <h3 class="text-center">Login</h3>
         <form id="loginForm">
             <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" >
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" >
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
@@ -46,6 +46,12 @@
                 <button type="submit" class="btn btn-primary  form-control">Login</button>
             </div>
         </form>
+        <p class="text-center text-sm text-gray-600 mt-2">
+          Don't have an account?
+          <a href="register.php" class="text-green-500 font-semibold"
+            >Signup</a
+          >
+        </p
     </div>
 </div>
 
@@ -69,12 +75,12 @@ $(document).ready(function () {
             button: "OK",
           }).then(function () {
             let role = res.role;
-            if (role === "admin") {
+            if (role === "Admin") {
               window.location.href = "index.php";
-            } else if (role === "employee") {
-              window.location.href = "employee_dashboard.php";
-            } else if (role === "job_seeker") {
-              window.location.href = "jobSeeker_dashboard.php";
+            } else if (role === "Doctor") {
+              window.location.href = "doctor_dashboard.php";
+            } else if (role === "Patient") {
+              window.location.href = "patient_dashboard.php";
             }
           });
         } else {

@@ -9,6 +9,9 @@ try {
     $conn = $db->getConnection();
     
     switch ($action) {          
+        case 'get_doctor':
+            get_doctor($conn);
+            break;
         case 'display_user':
             display_user($conn);
             break;
@@ -39,14 +42,26 @@ try {
         'message' => $e->getMessage()
     ]);
 }
-
+function get_doctor($conn) {
+    $stmt = $conn->query("
+        SELECT 
+            doctor_id, 
+            full_name as doctor_name
+        FROM doctors
+    ");
+    
+    echo json_encode([
+        'status' => 'success',
+        'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)
+    ]);
+}
 function display_user($conn) {
     $query = "
         SELECT 
             user_id,
-            name,
-            email,
+            username,
             role,
+            status,
             created_at
         FROM users 
     ";
@@ -54,224 +69,223 @@ function display_user($conn) {
     $stmt = $conn->query($query);
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
-
 function create_user($conn) {
-    $required = ['name','email', 'password','confirmPassword','role'];
+    $required = ['username', 'password', 'confirmPassword', 'role', 'status'];
+    $optional = ['related_doctor_id', 'related_patient_id'];
     $data = [];
-    
+
+    // Hubi required fields
     foreach ($required as $field) {
         if (empty($_POST[$field])) {
             throw new Exception(ucfirst(str_replace('_', ' ', $field)) . ' is required');
         }
-        $data[$field] = $_POST[$field];
+        $data[$field] = trim($_POST[$field]);
     }
 
-    // Check for duplicate name 
-    $stmt = $conn->prepare("
-        SELECT user_id FROM users 
-        WHERE email = ?  
-    ");
-    $stmt->execute([$data['email']]);
+    // Qaado optional fields (haddii la soo diro)
+    foreach ($optional as $field) {
+        // Haddii POST ka yimaado oo madhan yahay, u dhig null si DB u fahmo
+        $data[$field] = (isset($_POST[$field]) && $_POST[$field] !== '') ? $_POST[$field] : null;
+    }
+
+    // Check for duplicate username
+    $stmt = $conn->prepare("SELECT user_id FROM users WHERE username = ?");
+    $stmt->execute([$data['username']]);
     if ($stmt->rowCount() > 0) {
-        throw new Exception('users record already exists for this Email');
+        throw new Exception('User record already exists for this username');
     }
-     if ($data['password'] !== $data['confirmPassword']) {
-    throw new Exception('Passwords do not match');
+
+    // Check passwords match
+    if ($data['password'] !== $data['confirmPassword']) {
+        throw new Exception('Passwords do not match');
     }
-    // Insert record
+
+    // Prepare insert query
     $stmt = $conn->prepare("
         INSERT INTO users 
-        (name, email, password,role) 
-        VALUES (?, ?, ?, ?)
+        (username, password, role, status, related_doctor_id, related_patient_id) 
+        VALUES (?, ?, ?, ?, ?, ?)
     ");
-    
+
+    // Execute query with data, make sure doctor_id or patient_id is NULL if empty
     $success = $stmt->execute([
-        $data['name'],
-        $data['email'],
+        $data['username'],
         $data['password'],
-        $data['role']
+        $data['role'],
+        $data['status'],
+        $data['related_doctor_id'] !== null ? $data['related_doctor_id'] : null,
+        $data['related_patient_id'] !== null ? $data['related_patient_id'] : null
     ]);
-    
+
     if ($success) {
         echo json_encode([
             'status' => 'success',
-            'message' => 'users recorded successfully'
+            'message' => 'User recorded successfully'
         ]);
     } else {
-        throw new Exception('Failed to record users');
+        throw new Exception('Failed to record user');
     }
 }
 
+// function update_user($conn) {
+//     // Accept both 'edit_id' and 'id' as the identifier
+//     $id = $_POST['edit_id'] ?? $_POST['id'] ?? null;
+    
+//     $required = [
+//         'id' => $id,
+//         'username' => $_POST['edit_username'] ?? null,
+//         'role' => $_POST['edit_role'] ?? null,
+//         'status' => $_POST['edit_status'] ?? null
+//     ];
+    
+//     // Validate required fields
+//     foreach ($required as $field => $value) {
+//         if (empty($value)) {
+//             throw new Exception(ucfirst(str_replace('_', ' ', $field)) . ' is required');
+//         }
+//     }
+    
+//     // Check for duplicate (excluding current record)
+//     $stmt = $conn->prepare("
+//         SELECT user_id FROM users 
+//         WHERE username = ?  AND user_id != ?
+//     ");
+//     $stmt->execute([
+//         $required['username'],
+//         $required['id']
+//     ]);
+//     if ($stmt->rowCount() > 0) {
+//         throw new Exception('A user with this username already exists.');
+//     }
+//     // Update record
+//     $stmt = $conn->prepare("
+//         UPDATE users SET
+//             username = ?,
+//             role = ?,
+//             status = ?
+//         WHERE user_id = ?
+//     ");
+    
+//     $success = $stmt->execute([
+//         $required['username'],
+//         $required['role'],
+//         $required['status'],
+//         $required['id']
+//     ]);
+    
+//     if ($success) {
+//         echo json_encode([
+//             'status' => 'success',
+//             'message' => 'user updated successfully'
+//         ]);
+//     } else {
+//         throw new Exception('Failed to update user');
+//     }
+// }
 function update_user($conn) {
     // Accept both 'edit_id' and 'id' as the identifier
     $id = $_POST['edit_id'] ?? $_POST['id'] ?? null;
     
     $required = [
         'id' => $id,
-        'name' => $_POST['edit_name'] ?? null,
-        'email' => $_POST['edit_email'] ?? null,
-        'role' => $_POST['edit_role'] ?? null
+        'username' => $_POST['edit_username'] ?? null,
+        'role' => $_POST['edit_role'] ?? null,
+        'status' => $_POST['edit_status'] ?? null
     ];
     
+    $optional = [
+        'related_doctor_id' => $_POST['edit_related_doctor_id'] ?? null,
+        'related_patient_id' => $_POST['edit_related_patient_id'] ?? null
+    ];
+
     // Validate required fields
     foreach ($required as $field => $value) {
         if (empty($value)) {
             throw new Exception(ucfirst(str_replace('_', ' ', $field)) . ' is required');
         }
     }
+
+    // Validate related_patient_id exists or null
+    if (!empty($optional['related_patient_id'])) {
+        $stmtCheckPatient = $conn->prepare("SELECT patient_id FROM patients WHERE patient_id = ?");
+        $stmtCheckPatient->execute([$optional['related_patient_id']]);
+        if ($stmtCheckPatient->rowCount() === 0) {
+            throw new Exception('Invalid related_patient_id: patient does not exist');
+        }
+    } else {
+        $optional['related_patient_id'] = null;
+    }
+
+    // Validate related_doctor_id exists or null
+    if (!empty($optional['related_doctor_id'])) {
+        $stmtCheckDoctor = $conn->prepare("SELECT doctor_id FROM doctors WHERE doctor_id = ?");
+        $stmtCheckDoctor->execute([$optional['related_doctor_id']]);
+        if ($stmtCheckDoctor->rowCount() === 0) {
+            throw new Exception('Invalid related_doctor_id: doctor does not exist');
+        }
+    } else {
+        $optional['related_doctor_id'] = null;
+    }
     
-    // Check for duplicate (excluding current record)
+    // Check for duplicate username excluding current record
     $stmt = $conn->prepare("
         SELECT user_id FROM users 
-        WHERE email = ?  AND user_id != ?
+        WHERE username = ? AND user_id != ?
     ");
     $stmt->execute([
-        $required['email'],
+        $required['username'],
         $required['id']
     ]);
     if ($stmt->rowCount() > 0) {
-        throw new Exception('A user with this Email already exists.');
+        throw new Exception('A user with this username already exists.');
     }
-    // Update record
+
+    // Update record including related ids
     $stmt = $conn->prepare("
         UPDATE users SET
-            name = ?,
-            email = ?,
-            role = ?
+            username = ?,
+            role = ?,
+            status = ?,
+            related_doctor_id = ?,
+            related_patient_id = ?
         WHERE user_id = ?
     ");
     
     $success = $stmt->execute([
-        $required['name'],
-        $required['email'],
+        $required['username'],
         $required['role'],
+        $required['status'],
+        $optional['related_doctor_id'],
+        $optional['related_patient_id'],
         $required['id']
     ]);
     
     if ($success) {
         echo json_encode([
             'status' => 'success',
-            'message' => 'user updated successfully'
+            'message' => 'User updated successfully'
         ]);
     } else {
         throw new Exception('Failed to update user');
     }
 }
 
-// function delete_user($conn) {
-//     if (empty($_POST['id'])) {
-//         throw new Exception('User ID is required');
-//     }
 
-//     $userId = $_POST['id'];
-
-//     try {
-//         // Start transaction
-//         $conn->beginTransaction();
-
-//         // 1. Hel job IDs uu leeyahay userkan (employer_id)
-//         $jobsStmt = $conn->prepare("SELECT job_id FROM jobs WHERE employer_id = ?");
-//         $jobsStmt->execute([$userId]);
-//         $jobIds = $jobsStmt->fetchAll(PDO::FETCH_COLUMN);
-
-//         // 2. Haddii uu jiro wax job ah, tirtiro applications-ka la xiriira
-//         if (!empty($jobIds)) {
-//             $inQuery = implode(',', array_fill(0, count($jobIds), '?'));
-//             $deleteAppsStmt = $conn->prepare("DELETE FROM applications WHERE job_id IN ($inQuery)");
-//             $deleteAppsStmt->execute($jobIds);
-//         }
-
-//         // 3. Tirtir jobs uu leeyahay user-ka
-//         $deleteJobsStmt = $conn->prepare("DELETE FROM jobs WHERE employer_id = ?");
-//         $deleteJobsStmt->execute([$userId]);
-
-//         // 4. Tirtir companies uu leeyahay user-ka
-//         $deleteCompaniesStmt = $conn->prepare("DELETE FROM companies WHERE employer_id = ?");
-//         $deleteCompaniesStmt->execute([$userId]);
-
-//         // 5. Ugu dambayn tirtir user-ka
-//         $deleteUserStmt = $conn->prepare("DELETE FROM users WHERE user_id = ?");
-//         $success = $deleteUserStmt->execute([$userId]);
-
-//         if ($success) {
-//             $conn->commit();
-//             echo json_encode([
-//                 'status' => 'success',
-//                 'message' => 'User, their jobs, related applications, and companies deleted successfully'
-//             ]);
-//         } else {
-//             $conn->rollBack();
-//             throw new Exception('Failed to delete user');
-//         }
-
-//     } catch (Exception $e) {
-//         $conn->rollBack();
-//         echo json_encode([
-//             'status' => 'error',
-//             'message' => $e->getMessage()
-//         ]);
-//     }
-// }
 function delete_user($conn) {
     if (empty($_POST['id'])) {
-        throw new Exception('User ID is required');
+        throw new Exception('User  ID is required');
     }
-
-    $userId = $_POST['id'];
-
-    try {
-        // Start transaction
-        $conn->beginTransaction();
-
-        // 1. Delete applications uu sameeyay user-ka (job seeker)
-        $deleteOwnApplications = $conn->prepare("DELETE FROM applications WHERE user_id = ?");
-        $deleteOwnApplications->execute([$userId]);
-
-        // 2. Delete user profile uu leeyahay (job seeker)
-        $deleteProfile = $conn->prepare("DELETE FROM user_profiles WHERE user_id = ?");
-        $deleteProfile->execute([$userId]);
-
-        // 3. Hel job_ids uu user-ku leeyahay (haddii uu employer yahay)
-        $jobsStmt = $conn->prepare("SELECT job_id FROM jobs WHERE employer_id = ?");
-        $jobsStmt->execute([$userId]);
-        $jobIds = $jobsStmt->fetchAll(PDO::FETCH_COLUMN);
-
-        // 4. Delete applications-ka jobs-ka uu sameeyay (employer)
-        if (!empty($jobIds)) {
-            $inQuery = implode(',', array_fill(0, count($jobIds), '?'));
-            $deleteJobApplications = $conn->prepare("DELETE FROM applications WHERE job_id IN ($inQuery)");
-            $deleteJobApplications->execute($jobIds);
-        }
-
-        // 5. Delete jobs uu leeyahay
-        $deleteJobs = $conn->prepare("DELETE FROM jobs WHERE employer_id = ?");
-        $deleteJobs->execute([$userId]);
-
-        // 6. Delete companies uu leeyahay
-        $deleteCompanies = $conn->prepare("DELETE FROM companies WHERE employer_id = ?");
-        $deleteCompanies->execute([$userId]);
-
-        // 7. Ugu dambayn delete user-ka
-        $deleteUser = $conn->prepare("DELETE FROM users WHERE user_id = ?");
-        $success = $deleteUser->execute([$userId]);
-
-        if ($success) {
-            $conn->commit();
-            echo json_encode([
-                'status' => 'success',
-                'message' => 'User and all related data deleted successfully (applications, jobs, companies, profile)'
-            ]);
-        } else {
-            $conn->rollBack();
-            throw new Exception('Failed to delete user');
-        }
-
-    } catch (Exception $e) {
-        $conn->rollBack();
+    
+    $stmt = $conn->prepare("DELETE FROM users WHERE user_id = ?");
+    $success = $stmt->execute([$_POST['id']]);
+    
+    if ($success) {
         echo json_encode([
-            'status' => 'error',
-            'message' => $e->getMessage()
+            'status' => 'success',
+            'message' => 'Users  deleted successfully'
         ]);
+    } else {
+        throw new Exception('Failed to delete Users ');
     }
 }
 
